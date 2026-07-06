@@ -30,7 +30,7 @@ const TAB_KEY     = 'spectre_tab';
 const hasSession  = () => { try { return sessionStorage.getItem(SESSION_KEY) === '1'; } catch { return false; } };
 
 export default function App() {
-  const [phase,           setPhase]           = useState(() => (hasSession() ? 'app' : 'intro')); // intro | earth | app
+  const [phase,           setPhase]           = useState('earth');
   const [activeTab,       setActiveTab]       = useState(() => {
     try { return (hasSession() && sessionStorage.getItem(TAB_KEY)) || 'main'; } catch { return 'main'; }
   });

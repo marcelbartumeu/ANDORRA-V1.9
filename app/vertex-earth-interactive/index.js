@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { OrbitControls } from "jsm/controls/OrbitControls.js";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import getStarfield from "./src/getStarfield.js";
 
 const scene = new THREE.Scene();

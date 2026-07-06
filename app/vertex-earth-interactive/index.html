@@ -33,6 +33,7 @@
       text-transform: uppercase; color: rgba(255,255,255,0.28);
     }
     #search-container {
+      display: none
       position: absolute; top: 132px; left: 50%; transform: translateX(-50%);
       pointer-events: all; width: 480px; max-width: calc(100vw - 2.5rem);
     }
@@ -97,6 +98,7 @@
     #suggestion-item:hover { background: rgba(255,255,255,0.08); }
     #suggestion-arrow { margin-left: auto; color: rgba(255,255,255,0.32); font-size: 18px; }
     #hint {
+      display: none;
       position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
       font-family: 'Syne', sans-serif;
       font-size: 11px; font-weight: 500; letter-spacing: 0.22em;
@@ -122,8 +124,8 @@
     <body>
     <div id="ui">
       <div id="brand">
-        <div id="brand-mark">SPECTRE</div>
-        <div id="brand-sub">Sovereign Decision Intelligence</div>
+        <div id="brand-mark">Andorra Living Lab at a Glance</div>
+        <!--<div id="brand-sub">Sovereign Decision Intelligence</div>>-->
       </div>
       <div id="search-container">
         <div id="search-box">
