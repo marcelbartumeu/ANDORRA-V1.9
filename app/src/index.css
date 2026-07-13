@@ -1047,3 +1047,148 @@ body {
 .mapboxgl-ctrl-bottom-left .mapboxgl-ctrl-logo,
 .mapboxgl-ctrl-attrib { opacity: 0.3; }
 .mapboxgl-canvas { outline: none; }
+
+
+.spectre-story-page {
+  position: relative;
+  min-height: 100vh;
+  background: #02040a;
+  color: white;
+}
+
+.story-earth-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.story-content-layer {
+  position: relative;
+  z-index: 5;
+  min-height: 100vh;
+}
+
+.story-shell {
+  position: relative;
+  z-index: 5;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(320px, 44vw) minmax(320px, 1fr);
+  gap: 4rem;
+  padding: 8rem 6vw;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.story-visual-panel {
+  position: sticky;
+  top: 6rem;
+  align-self: start;
+  min-height: 70vh;
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  background: rgba(8, 10, 16, 0.72);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 0 80px rgba(110, 150, 255, 0.08);
+}
+
+.story-panel-eyebrow,
+.story-eyebrow {
+  margin: 0 0 1rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(170, 190, 230, 0.72);
+}
+
+.story-visual-panel h2,
+.story-step h2 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.8rem, 3vw, 3.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.story-visual-panel p,
+.story-step p {
+  color: rgba(255, 255, 255, 0.68);
+  line-height: 1.7;
+}
+
+.story-debug-card {
+  margin-top: 2rem;
+  padding: 1rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 0.85rem;
+}
+
+.story-debug-card p {
+  margin: 0.35rem 0;
+}
+
+.story-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 35vh;
+  padding-bottom: 30vh;
+}
+
+.story-step {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0.35;
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.story-step.is-active {
+  opacity: 1;
+  transform: translateY(-4px);
+}
+
+@media (max-width: 900px) {
+  .story-shell {
+    grid-template-columns: 1fr;
+    padding: 5rem 1.25rem;
+  }
+
+  .story-visual-panel {
+    position: relative;
+    top: 0;
+    min-height: auto;
+  }
+
+  .story-scroll {
+    gap: 8rem;
+  }
+}
+
+
+/* Code to allow the scrollytelling landing page to scroll: */
+html,
+body,
+#root {
+  min-height: 100%;
+  height: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.spectre-story-page {
+  min-height: 100vh;
+  height: auto;
+  overflow: visible;
+}
+
+.story-content-layer {
+  min-height: 100vh;
+  height: auto;
+  overflow: visible;
+}
+
+.story-shell {
+  min-height: 420vh;
+}

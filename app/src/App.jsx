@@ -9,6 +9,7 @@ import MapVisualization from './components/MapVisualization';
 import EarthView from './components/EarthView';
 import SpectreIntro from './components/SpectreIntro';
 import { useSerial } from './hooks/useSerial';
+import StoryScrolly from './components/StoryScrolly';
 
 // Scenario name → numeric overlay index (matches OVERLAY_SCENARIOS in chartUtils.js)
 const SCENARIO_INDEX = {
@@ -164,11 +165,19 @@ export default function App() {
     return <SpectreIntro onComplete={() => setPhase('earth')} />;
   }
 
+  // EarthView = SPECTRE visual background/shell
+  // StoryScrolly = React scrollytelling content layer
   if (phase === 'earth') {
     return (
-      <div className="earth-stage" style={{ position: 'fixed', inset: 0 }}>
-        <EarthView />
+      <div className="spectre-story-page">
+        <div className="earth-stage story-earth-background" aria-hidden="true">
+          <EarthView /> 
       </div>
+
+      <div className="story-content-layer">
+        <StoryScrolly />
+      </div>
+    </div>
     );
   }
 
