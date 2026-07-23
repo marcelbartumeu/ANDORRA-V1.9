@@ -82,8 +82,7 @@ body {
   font-family: var(--font);
   font-size: 14px;
   line-height: 1.5;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -809,7 +808,7 @@ body {
    SPECTRE — shell, liquid glass, gradient, boot sequence, Mapbox theme
    ════════════════════════════════════════════════════════════════════════════ */
 
-#root { height: 100vh; }
+#root { min-height: 100vh; }
 
 /* ── App shell & gradient ─────────────────────────────────────────────────── */
 .app-shell {
@@ -1048,147 +1047,605 @@ body {
 .mapboxgl-ctrl-attrib { opacity: 0.3; }
 .mapboxgl-canvas { outline: none; }
 
-
 .spectre-story-page {
   position: relative;
   min-height: 100vh;
   background: #02040a;
   color: white;
+  overflow: visible;
 }
 
-.story-earth-background {
+.spectre-story-background {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at 20% 10%,
+      rgba(115, 145, 200, 0.08),
+      transparent 38%
+    ),
+    linear-gradient(
+      180deg,
+      #02040a 0%,
+      #05070d 50%,
+      #02040a 100%
+    );
 }
 
 .story-content-layer {
   position: relative;
-  z-index: 5;
+  z-index: 1;
+  min-height: 100vh;
+  overflow: visible;
+}
+
+.story-page {
+  position: relative;
   min-height: 100vh;
 }
 
-.story-shell {
+
+/* ── LEFT STORY NAVIGATION ─────────────────────────────────────────────── */
+
+.story-side-nav {
+  position: fixed;
+  top: 50%;
+  left: 1.25rem;
+  transform: translateY(-50%);
+
+  z-index: 50;
+  width: 250px;
+
+  transition:
+    width 250ms ease,
+    opacity 250ms ease;
+}
+
+.story-side-nav.is-closed {
+  width: 54px;
+}
+
+.story-side-nav-shell {
   position: relative;
-  z-index: 5;
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: minmax(320px, 44vw) minmax(320px, 1fr);
-  gap: 4rem;
-  padding: 8rem 6vw;
+
+  padding: 1rem;
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+
+  background: rgba(8, 10, 16, 0.78);
+
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.story-side-nav.is-closed .story-side-nav-shell {
+  min-height: 54px;
+}
+
+.story-nav-toggle {
+  position: absolute;
+  top: 0.7rem;
+  right: -1rem;
+
+  width: 2rem;
+  height: 2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+
+  background: rgba(12, 14, 20, 0.96);
+  color: white;
+
+  font-family: var(--font);
+  font-size: 0.9rem;
+
+  cursor: pointer;
+}
+
+.story-nav-brand {
+  margin: 0 0 1rem;
+
+  font-family: var(--font-title);
+  font-size: 0.72rem;
+  font-weight: 700;
+
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+
+  color: rgba(255, 255, 255, 0.52);
+}
+
+.story-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.story-nav-list button {
+  width: 100%;
+
+  padding: 0.65rem 0.75rem;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+
+  font-family: var(--font);
+  font-size: 0.78rem;
+  line-height: 1.25;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 180ms ease,
+    color 180ms ease;
+}
+
+.story-nav-list button:hover {
+  background: rgba(255, 255, 255, 0.06);
   color: rgba(255, 255, 255, 0.9);
 }
 
-.story-visual-panel {
-  position: sticky;
-  top: 6rem;
-  align-self: start;
-  min-height: 70vh;
-  padding: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 24px;
-  background: rgba(8, 10, 16, 0.72);
-  backdrop-filter: blur(18px);
-  box-shadow: 0 0 80px rgba(110, 150, 255, 0.08);
+.story-nav-list button.is-active {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
 }
 
-.story-panel-eyebrow,
-.story-eyebrow {
-  margin: 0 0 1rem;
-  font-size: 0.72rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: rgba(170, 190, 230, 0.72);
+
+/* ── HERO ──────────────────────────────────────────────────────────────── */
+
+.story-hero {
+  position: relative;
+
+  min-height: 100vh;
+
+  display: flex;
+  align-items: flex-end;
+
+  padding:
+    8rem
+    7vw
+    7rem
+    clamp(7rem, 19vw, 20rem);
+
+  background-size: cover;
+  background-position: center;
+
+  scroll-margin-top: 1rem;
 }
 
-.story-visual-panel h2,
-.story-step h2 {
-  margin: 0 0 1rem;
-  font-size: clamp(1.8rem, 3vw, 3.8rem);
-  line-height: 1.05;
+.story-hero-content {
+  position: relative;
+  z-index: 2;
+
+  max-width: 1050px;
+}
+
+.story-hero h1 {
+  margin: 0;
+
+  font-family: var(--font);
+
+  font-size: clamp(2.7rem, 5.5vw, 6.7rem);
+  font-weight: 600;
+
+  line-height: 1.02;
   letter-spacing: -0.04em;
+
+  color: white;
 }
 
-.story-visual-panel p,
-.story-step p {
-  color: rgba(255, 255, 255, 0.68);
-  line-height: 1.7;
+
+/* ── SHARED SECTION STRUCTURE ─────────────────────────────────────────── */
+
+.story-section {
+  position: relative;
+
+  min-height: 100vh;
+
+  padding:
+    8rem
+    7vw
+    9rem
+    clamp(7rem, 19vw, 20rem);
+
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+  scroll-margin-top: 1rem;
 }
 
-.story-debug-card {
-  margin-top: 2rem;
-  padding: 1rem;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.06);
-  font-size: 0.85rem;
+.story-section-inner {
+  width: 100%;
+  max-width: 1380px;
+
+  margin: 0 auto;
 }
 
-.story-debug-card p {
-  margin: 0.35rem 0;
+.story-section-header {
+  max-width: 820px;
+
+  margin-bottom: 3.5rem;
 }
 
-.story-scroll {
+.story-section-header h2 {
+  margin: 0 0 1rem;
+
+  font-family: var(--font);
+
+  font-size: clamp(2.4rem, 4.5vw, 5.4rem);
+  font-weight: 600;
+
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+
+  color: white;
+}
+
+.story-section-subtitle {
+  max-width: 650px;
+
+  margin: 0;
+
+  font-family: var(--font);
+  font-size: clamp(1rem, 1.4vw, 1.3rem);
+  font-weight: 400;
+  line-height: 1.6;
+
+  color: rgba(255, 255, 255, 0.56);
+}
+
+/* ── NARRATIVE CARDS ──────────────────────────────────────────────────── */
+
+.story-narrative-card {
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+
+  background: rgba(10, 12, 18, 0.68);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.story-narrative-card p {
+  margin: 0;
+
+  font-size: clamp(1rem, 1.25vw, 1.18rem);
+  line-height: 1.8;
+
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.story-narrative-column {
   display: flex;
   flex-direction: column;
-  gap: 35vh;
-  padding-bottom: 30vh;
+  gap: 1.5rem;
 }
 
-.story-step {
-  min-height: 70vh;
+
+/* ── MAIN SECTION LAYOUTS ─────────────────────────────────────────────── */
+
+.story-split-grid {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.2fr)
+    minmax(300px, 0.8fr);
+
+  gap: 2rem;
+
+  align-items: stretch;
+}
+
+.story-section-secondary-row {
+  margin-top: 3rem;
+
+  grid-template-columns:
+    minmax(300px, 0.8fr)
+    minmax(0, 1.2fr);
+}
+
+.story-two-map-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 1.5rem;
+
+  margin-bottom: 2rem;
+}
+
+.story-three-map-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 1rem;
+
+  margin-bottom: 2rem;
+}
+
+.story-decision-grid {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.35fr)
+    minmax(320px, 0.65fr);
+
+  gap: 1.5rem;
+
+  margin: 1.5rem 0 2rem;
+}
+
+.story-graph-stack {
+  display: grid;
+  gap: 1rem;
+}
+
+
+/* ── PHASE 4 VISUALIZATION PLACEHOLDERS ──────────────────────────────── */
+
+.story-visual-placeholder {
+  min-height: 470px;
+
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
-  opacity: 0.35;
-  transition: opacity 300ms ease, transform 300ms ease;
+
+  gap: 0.6rem;
+
+  padding: 2rem;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 26px;
+
+  background: rgba(8, 10, 16, 0.78);
+
+  text-align: center;
+
+  color: rgba(255, 255, 255, 0.7);
 }
 
-.story-step.is-active {
-  opacity: 1;
-  transform: translateY(-4px);
+.story-visual-placeholder strong {
+  font-family: var(--font-title);
+
+  font-size: 1.1rem;
+  font-weight: 600;
+
+  color: rgba(255, 255, 255, 0.84);
 }
 
-@media (max-width: 900px) {
-  .story-shell {
+.story-placeholder-kicker {
+  font-size: 0.65rem;
+
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+
+  color: rgba(170, 190, 230, 0.52);
+}
+
+.story-visual-placeholder--wide {
+  min-height: 350px;
+
+  margin-bottom: 2rem;
+}
+
+.story-visual-placeholder--timeline {
+  min-height: 180px;
+}
+
+.story-visual-placeholder--graph {
+  min-height: 180px;
+}
+
+
+/* ── BUILDABLE LAND NUMBER SEQUENCE ──────────────────────────────────── */
+
+.story-metric-sequence {
+  display: flex;
+  align-items: center;
+
+  gap: 0.75rem;
+
+  flex-wrap: wrap;
+}
+
+.story-metric-step {
+  padding: 0.8rem 1rem;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  font-family: var(--font-title);
+
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.story-metric-arrow {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+
+/* ── PHOTOGRAPHY ──────────────────────────────────────────────────────── */
+
+.story-photo-card {
+  min-height: 470px;
+
+  border-radius: 26px;
+
+  background-color: #11141b;
+  background-size: cover;
+  background-position: center;
+
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.35);
+}
+
+.story-photo-break-section {
+  padding:
+    1rem
+    7vw
+    7rem
+    clamp(7rem, 19vw, 20rem);
+}
+
+.story-photo-break {
+  width: 100%;
+  max-width: 1380px;
+
+  min-height: 58vh;
+
+  margin: 0 auto;
+
+  border-radius: 30px;
+
+  background-color: #11141b;
+  background-size: cover;
+  background-position: center;
+
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.42);
+}
+
+
+/* ── FINAL DECISION SECTION ───────────────────────────────────────────── */
+
+.story-decision-summary {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 1rem;
+
+  margin-top: 2rem;
+}
+
+.story-decision-summary > div {
+  padding: 1.5rem;
+
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.story-decision-summary span {
+  display: block;
+
+  margin-bottom: 0.75rem;
+
+  font-size: 0.7rem;
+  font-weight: 600;
+
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+
+  color: rgba(170, 190, 230, 0.7);
+}
+
+.story-decision-summary p {
+  color: rgba(255, 255, 255, 0.58);
+}
+
+
+/* ── RESPONSIVE ──────────────────────────────────────────────────────── */
+
+@media (max-width: 1100px) {
+  .story-side-nav {
+    width: 210px;
+  }
+
+  .story-hero,
+  .story-section,
+  .story-photo-break-section {
+    padding-left: 15rem;
+  }
+
+  .story-three-map-grid {
     grid-template-columns: 1fr;
-    padding: 5rem 1.25rem;
   }
 
-  .story-visual-panel {
-    position: relative;
-    top: 0;
-    min-height: auto;
+  .story-decision-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 820px) {
+  .story-side-nav {
+    top: 1rem;
+    left: 1rem;
+
+    transform: none;
+
+    width: 220px;
   }
 
-  .story-scroll {
-    gap: 8rem;
+  .story-hero,
+  .story-section,
+  .story-photo-break-section {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .story-split-grid,
+  .story-section-secondary-row,
+  .story-two-map-grid,
+  .story-decision-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .story-hero {
+    padding-top: 8rem;
+  }
+
+  .story-section {
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+  }
+
+  .story-visual-placeholder,
+  .story-photo-card {
+    min-height: 380px;
   }
 }
 
 
 /* Code to allow the scrollytelling landing page to scroll: */
 html,
-body,
-#root {
+body {
   min-height: 100%;
-  height: auto;
-  overflow-x: hidden;
-  overflow-y: auto;
 }
 
-.spectre-story-page {
+body {
+  overflow-x: clip;
+}
+
+#root {
   min-height: 100vh;
-  height: auto;
-  overflow: visible;
-}
-
-.story-content-layer {
-  min-height: 100vh;
-  height: auto;
-  overflow: visible;
-}
-
-.story-shell {
-  min-height: 420vh;
 }

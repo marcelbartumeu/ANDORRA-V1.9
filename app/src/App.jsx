@@ -6,7 +6,6 @@ import KpiGrid from './components/KpiGrid';
 import AgentAnalyticsPanel from './components/AgentAnalyticsPanel';
 import NetworkView from './components/NetworkView';
 import MapVisualization from './components/MapVisualization';
-import EarthView from './components/EarthView';
 import SpectreIntro from './components/SpectreIntro';
 import { useSerial } from './hooks/useSerial';
 import StoryScrolly from './components/StoryScrolly';
@@ -165,14 +164,11 @@ export default function App() {
     return <SpectreIntro onComplete={() => setPhase('earth')} />;
   }
 
-  // EarthView = SPECTRE visual background/shell
-  // StoryScrolly = React scrollytelling content layer
+// SPECTRE-styled scrollytelling landing page
   if (phase === 'earth') {
     return (
       <div className="spectre-story-page">
-        <div className="earth-stage story-earth-background" aria-hidden="true">
-          <EarthView /> 
-      </div>
+        <div className="spectre-story-background" aria-hidden="true" />
 
       <div className="story-content-layer">
         <StoryScrolly />
@@ -201,7 +197,7 @@ export default function App() {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <button className="glass-pill-btn" onClick={() => setPhase('earth')}>
-                ← Globe
+                ← Story
               </button>
               <TabNav activeTab={activeTab} setActiveTab={handleTabChange} />
             </div>

@@ -11,28 +11,39 @@
     "dataSource": "/model/Current.json",
     "layers": ["andorra_boundary"],
     "kpis": ["Pop", "Tour", "GDPpc"],
-    "annotation": "Andorra begins this story as a compact mountain country shaped by population growth, tourism, limited land, and the question of how to grow without losing what makes it livable."
+    "annotation": "The country is small, mountainous, and physically constrained, meaning that growth is not just a question of adding more people. It is a question of where those people can live, how they move, what infrastructure they rely on, and what land must remain protected.",
+    "secondaryAnnotation": "Today, Andorra's built environment occupies only part of the country's total land area, while much of the surrounding landscape is limited by steep terrain, protected natural areas, or existing development patterns. As the population changes, Andorra cannot simply expand outward without tradeoffs."
   },
   {
     "id": "buildable-land",
     "order": 2,
-    "eyebrow": "02 / Buildable Land",
+    "eyebrow": "02 / The Buildable Land Constraint",
     "title": "Not all land is buildable land",
-    "section": "Buildable Land Constraint",
+    "section": "The Buildable Land Constraint",
     "scenario": "Continuity",
     "year": 2026,
     "displayYear": 2026,
     "dataSource": "/model/Continuity_timeseries.json",
-    "layers": ["andorra_boundary", "growth_constraints", "andorra_protected_areas", "accessibility_population"],
+    "layers": [
+      "andorra_boundary",
+      "growth_constraints",
+      "andorra_protected_areas",
+      "accessibility_population"
+    ],
     "kpis": ["Pop", "Access", "RoadPerCapita_m"],
-    "annotation": "The story narrows from Andorra’s full 468 km² to the much smaller share of land that can realistically absorb future growth."
+    "visualSequence": [
+      "468 km² total",
+      "~70 km² buildable",
+      "~40 km² remaining"
+    ],
+    "annotation": "Andorra's total land area tells only part of the story. Protected landscapes, steep terrain, and existing development dramatically reduce the amount of land that can realistically absorb future growth. The remaining buildable cells become some of the country's most consequential planning decisions."
   },
   {
     "id": "sprawl-vs-density",
     "order": 3,
-    "eyebrow": "03 / Sprawl vs Density",
+    "eyebrow": "03 / Sprawl vs. Density",
     "title": "The same growth can take very different shapes",
-    "section": "Sprawl vs Density",
+    "section": "Sprawl vs. Density",
     "scenario": "Density",
     "compareScenarios": ["Overgrowth", "Density"],
     "year": 2049,
@@ -40,50 +51,77 @@
     "dataSource": "scenario_timeseries",
     "layers": ["growth_overgrowth", "growth_density"],
     "kpis": ["Pop", "Access", "CO2_total", "RoadPerCapita_m"],
-    "annotation": "Overgrowth spreads pressure outward. Density concentrates change. The choice is not only how much Andorra grows, but where that growth lands."
+    "annotation": "The same amount of growth can reshape the country in very different ways. Sprawl spreads development pressure outward across the remaining available land, while density concentrates change within existing centers. Each choice creates different consequences for access, infrastructure, mobility, and environmental pressure."
   },
   {
     "id": "population-scenarios",
     "order": 4,
-    "eyebrow": "04 / Scenarios to 2050",
-    "title": "Four possible futures, year by year",
-    "section": "Population Scenarios to 2050",
+    "eyebrow": "04 / Scenarios to 2049",
+    "title": "Three future growth patterns, compared across time",
+    "section": "Scenarios to 2049",
     "scenario": "Continuity",
-    "availableScenarios": ["Continuity", "Density", "Overgrowth", "Degrowth"],
+    "availableScenarios": [
+      "Continuity",
+      "Density",
+      "Overgrowth",
+      "Degrowth"
+    ],
+    "featuredScenarios": [
+      "Continuity",
+      "Density",
+      "Overgrowth"
+    ],
     "year": 2035,
     "displayYear": 2035,
     "yearRange": [2025, 2049],
     "dataSource": "scenario_timeseries",
     "layers": ["growth_continuity"],
     "kpis": ["Pop", "ForeignBorn", "GDPpc", "CO2_total"],
-    "annotation": "A year slider and scenario toggle will let the user move through projected futures and see how population, economy, access, and emissions change together."
+    "annotation": "Looking at the scenarios side by side makes it possible to see how different development patterns change both the physical shape of Andorra and the indicators that define life within it. The maps show where growth lands, while the timeline reveals how those futures unfold year by year."
   },
   {
     "id": "accessibility-infrastructure",
     "order": 5,
-    "eyebrow": "05 / Infrastructure Pressure",
-    "title": "Growth becomes real through infrastructure",
-    "section": "Accessibility & Infrastructure",
+    "eyebrow": "05 / Effects on Daily Life",
+    "title": "Planning choices become real through everyday access",
+    "section": "Effects on Daily Life",
     "scenario": "Overgrowth",
     "year": 2049,
     "displayYear": 2049,
     "dataSource": "/model/Overgrowth_timeseries.json",
-    "layers": ["accessibility_streets", "accessibility_schools", "bus_routes", "bus_stops"],
-    "kpis": ["Access", "RoadPerCapita_m", "ElectricityDemand_kWh_year", "HospitalRequiredBeds", "SchoolStudents"],
-    "annotation": "The future is not only population. It is electricity demand, road pressure, hospital beds, school capacity, and whether people can still access what they need."
+    "layers": [
+      "accessibility_streets",
+      "accessibility_schools",
+      "bus_routes",
+      "bus_stops"
+    ],
+    "kpis": [
+      "Access",
+      "RoadPerCapita_m",
+      "ElectricityDemand_kWh_year",
+      "HospitalRequiredBeds",
+      "SchoolStudents"
+    ],
+    "annotation": "Growth becomes tangible through daily life: how easily people can reach schools, transit, services, jobs, and one another. As population patterns change, so do travel distances, infrastructure demand, and the accessibility of the places people depend on."
   },
   {
     "id": "choose-future",
     "order": 6,
-    "eyebrow": "06 / Choose Andorra’s Future",
+    "eyebrow": "06 / Choose Andorra's Future",
     "title": "The future is a decision, not just a forecast",
     "section": "Choose Andorra's Future",
     "scenario": "All",
     "year": 2050,
     "displayYear": 2050,
     "dataSource": "/model/Scenario_Rollup.json",
-    "layers": ["growth_continuity", "growth_density", "growth_overgrowth", "growth_degrowth"],
+    "layers": [
+      "growth_continuity",
+      "growth_density",
+      "growth_overgrowth",
+      "growth_degrowth"
+    ],
     "kpis": ["Pop", "GDPpc", "CO2_total", "Access"],
-    "annotation": "Compare the scenarios side by side and ask what kind of growth Andorra should choose: continuity, density, overgrowth, or degrowth."
+    "annotation": "Every planning decision improves some outcomes while putting pressure on others. This final experience lets the user compare those tradeoffs directly: how policy choices change population distribution, land use, infrastructure demand, accessibility, environmental pressure, and social outcomes.",
+    "reflectionPrompt": "Which future would you choose for Andorra, and why?"
   }
 ]
