@@ -1620,6 +1620,11 @@ body {
     grid-template-columns: 1fr;
   }
 
+  .story-current-stats {
+    grid-template-columns: 1fr;
+  }
+
+
   .story-hero {
     padding-top: 8rem;
   }
@@ -1648,4 +1653,178 @@ body {
 
 #root {
   min-height: 100vh;
+}
+
+  /* ── ANDORRA TODAY MAP + CURRENT STATS ─────────────────────────────── */
+
+.story-map-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.story-map-card {
+  position: relative;
+
+  width: 100%;
+  height: 470px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 26px;
+
+  background: #080a10;
+
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.35);
+}
+
+.story-current-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.story-current-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  min-width: 0;
+
+  padding: 1rem;
+
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 16px;
+
+  background: rgba(10, 12, 18, 0.68);
+}
+
+.story-current-stat-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.story-current-stat-value {
+  font-size: clamp(1.1rem, 1.8vw, 1.6rem);
+  font-weight: 600;
+  line-height: 1.1;
+
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.story-current-stat-year {
+  font-size: 0.65rem;
+
+  color: rgba(255, 255, 255, 0.32);
+}
+
+/* ──  BUILDABLE LAND ───────────────────────────── */
+
+.story-buildable-map-column {
+  min-width: 0;
+}
+
+.story-buildable-map-card {
+  height: 520px;
+}
+
+.story-buildable-map {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.story-buildable-map-canvas {
+  position: absolute;
+  inset: 0;
+  background: #000;
+}
+
+.story-buildable-map-error {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 2rem;
+
+  background: rgba(0, 0, 0, 0.78);
+
+  color: rgba(255, 255, 255, 0.65);
+  text-align: center;
+}
+
+
+.story-buildable-stage-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  margin-top: 1rem;
+}
+
+
+.story-buildable-stage-button {
+  padding: 0.55rem 0.8rem;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: rgba(255, 255, 255, 0.5);
+
+  font: inherit;
+  font-size: 0.72rem;
+
+  cursor: pointer;
+
+  transition:
+    background 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease;
+}
+
+
+.story-buildable-stage-button:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+
+.story-buildable-stage-button.is-active {
+  border-color: rgba(255, 255, 255, 0.4);
+
+  background: rgba(255, 255, 255, 0.12);
+
+  color: white;
+}
+
+
+.story-metric-step {
+  transition:
+    opacity 250ms ease,
+    border-color 250ms ease,
+    background 250ms ease;
+}
+
+
+.story-metric-step:not(.is-active) {
+  opacity: 0.42;
+}
+
+
+.story-metric-step.is-active {
+  opacity: 1;
+
+  border-color: rgba(255, 255, 255, 0.32);
+
+  background: rgba(255, 255, 255, 0.08);
 }
