@@ -39,31 +39,32 @@
     "annotation": "Andorra's total land area tells only part of the story. Protected landscapes, steep terrain, and existing development dramatically reduce the amount of land that can realistically absorb future growth. The remaining buildable cells become some of the country's most consequential planning decisions."
   },
   {
-    "id": "population-scenarios",
-    "order": 4,
-    "eyebrow": "04 / Scenarios to 2049",
-    "title": "Three future growth patterns, compared across time",
-    "section": "Scenarios to 2049",
-    "scenario": "Continuity",
-    "availableScenarios": [
-      "Continuity",
-      "Density",
-      "Overgrowth",
-      "Degrowth"
-    ],
-    "featuredScenarios": [
-      "Continuity",
-      "Density",
-      "Overgrowth"
-    ],
-    "year": 2035,
-    "displayYear": 2035,
-    "yearRange": [2025, 2049],
-    "dataSource": "scenario_timeseries",
-    "layers": ["growth_continuity"],
-    "kpis": ["Pop", "ForeignBorn", "GDPpc", "CO2_total"],
-    "annotation": "You've seen how little of Andorra is actually available for development. The next question is what happens as population, development, and economic pressures evolve within those limits. The model explores several possible futures for Andorra through 2049."
-  },
+  "id": "population-scenarios",
+  "order": 3,
+  "title": "Three possible futures, year by year",
+  "section": "Scenarios to 2049",
+  "scenario": "Continuity",
+  "availableScenarios": [
+    "Continuity",
+    "Density",
+    "Overgrowth"
+  ],
+  "year": 2026,
+  "displayYear": 2026,
+  "yearRange": [2026, 2049],
+  "dataSource": "scenario_timeseries",
+  "layers": [
+    "growth_continuity",
+    "growth_density",
+    "growth_overgrowth"
+  ],
+  "kpis": [
+    "Pop",
+    "GDPpc",
+    "CO2_total"
+  ],
+  "annotation": "You've seen how little of Andorra is actually available for development. The next question is what happens as population, economic activity, and development pressure evolve within those limits. Continuity, Density, and Overgrowth show three different possible futures for the country through 2049."
+},
   {
     "id": "accessibility-infrastructure",
     "order": 5,
