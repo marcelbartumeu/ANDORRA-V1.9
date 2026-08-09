@@ -30,7 +30,7 @@ export default function BuildableLandSection({
         ? 2
         : 1;
 
-
+ 
   return (
     <div className="story-split-grid">
 

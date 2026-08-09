@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import AndorraTodaySection from "./story/AndorraTodaySection";
 import BuildableLandSection from "./story/BuildableLandSection";
-import SprawlDensitySection from "./story/SprawlDensitySection";
+//import SprawlDensitySection from "./story/SprawlDensitySection";
 import ScenariosSection from "./story/ScenariosSection";
 import DailyLifeSection from "./story/DailyLifeSection";
 import ChooseFutureSection from "./story/ChooseFutureSection";
@@ -47,7 +47,7 @@ function PhotoBreak({ src, label }) {
 const STORY_SECTION_COMPONENTS = {
   "andorra-today": AndorraTodaySection,
   "buildable-land": BuildableLandSection,
-  "sprawl-vs-density": SprawlDensitySection,
+  //"sprawl-vs-density": SprawlDensitySection,
   "population-scenarios": ScenariosSection,
   "accessibility-infrastructure": DailyLifeSection,
   "choose-future": ChooseFutureSection,

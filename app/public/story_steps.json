@@ -39,21 +39,6 @@
     "annotation": "Andorra's total land area tells only part of the story. Protected landscapes, steep terrain, and existing development dramatically reduce the amount of land that can realistically absorb future growth. The remaining buildable cells become some of the country's most consequential planning decisions."
   },
   {
-    "id": "sprawl-vs-density",
-    "order": 3,
-    "eyebrow": "03 / Sprawl vs. Density",
-    "title": "The same growth can take very different shapes",
-    "section": "Sprawl vs. Density",
-    "scenario": "Density",
-    "compareScenarios": ["Overgrowth", "Density"],
-    "year": 2049,
-    "displayYear": 2049,
-    "dataSource": "scenario_timeseries",
-    "layers": ["growth_overgrowth", "growth_density"],
-    "kpis": ["Pop", "Access", "CO2_total", "RoadPerCapita_m"],
-    "annotation": "The same amount of growth can reshape the country in very different ways. Sprawl spreads development pressure outward across the remaining available land, while density concentrates change within existing centers. Each choice creates different consequences for access, infrastructure, mobility, and environmental pressure."
-  },
-  {
     "id": "population-scenarios",
     "order": 4,
     "eyebrow": "04 / Scenarios to 2049",
@@ -77,7 +62,7 @@
     "dataSource": "scenario_timeseries",
     "layers": ["growth_continuity"],
     "kpis": ["Pop", "ForeignBorn", "GDPpc", "CO2_total"],
-    "annotation": "Looking at the scenarios side by side makes it possible to see how different development patterns change both the physical shape of Andorra and the indicators that define life within it. The maps show where growth lands, while the timeline reveals how those futures unfold year by year."
+    "annotation": "You've seen how little of Andorra is actually available for development. The next question is what happens as population, development, and economic pressures evolve within those limits. The model explores several possible futures for Andorra through 2049."
   },
   {
     "id": "accessibility-infrastructure",

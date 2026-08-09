@@ -338,18 +338,23 @@ export default function BuildableLandMap({
   }, [addOverlays, mapRef]);
 
 
-  // Change layer visibility whenever the story stage changes.
-  useEffect(() => {
-    stageRef.current = stage;
+// Change / restore map overlays whenever the story stage changes.
+useEffect(() => {
+  stageRef.current = stage;
 
-    const map = mapRef.current;
+  const map = mapRef.current;
 
-    if (!map || !map.isStyleLoaded()) {
-      return;
-    }
+  if (!map) return;
 
-    applyStage(map, stage);
-  }, [stage, mapRef]);
+  whenStyleReady(map, () => {
+    if (!mapDataRef.current) return;
+
+    // Important:
+    // Make sure the sources/layers actually exist before
+    // trying to change their visibility.
+    addOverlays(map);
+  });
+}, [stage, addOverlays, mapRef]);
 
 
   return (

@@ -23,3 +23,4 @@ export default function BaseMapView({ mapStyle = DEFAULT_MAP_STYLE }) {
     </div>
   );
 }
+ 
