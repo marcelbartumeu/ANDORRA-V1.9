@@ -2412,3 +2412,446 @@ body {
     text-align: center;
   }
 }
+
+/* ════════════════════════════════════════════════════════════════════════
+   EFFECTS ON DAILY LIFE
+   ════════════════════════════════════════════════════════════════════════ */
+
+.story-impact-explorer {
+  margin-top: 2rem;
+}
+
+
+/* KPI selector */
+
+.story-impact-tabs {
+  display: grid;
+
+  grid-template-columns:
+    repeat(5, minmax(0, 1fr));
+
+  gap: 0.65rem;
+
+  margin-bottom: 3rem;
+}
+
+
+.story-impact-tab {
+  padding:
+    0.9rem
+    1rem;
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.1);
+
+  border-radius: 999px;
+
+  background:
+    rgba(10, 12, 18, 0.7);
+
+  color:
+    rgba(255, 255, 255, 0.48);
+
+  font-size: 0.7rem;
+  font-weight: 600;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+
+.story-impact-tab:hover {
+  color:
+    rgba(255, 255, 255, 0.8);
+
+  border-color:
+    rgba(255, 255, 255, 0.22);
+}
+
+
+.story-impact-tab--active {
+  background:
+    rgba(255, 255, 255, 0.94);
+
+  border-color:
+    rgba(255, 255, 255, 0.94);
+
+  color: #05070c;
+}
+
+
+/* Selected KPI title */
+
+.story-impact-heading {
+  max-width: 680px;
+
+  margin:
+    0 auto
+    3rem;
+
+  text-align: center;
+}
+
+
+.story-impact-heading > span {
+  display: block;
+
+  margin-bottom: 0.65rem;
+
+  font-size: 0.65rem;
+  font-weight: 600;
+
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  color:
+    rgba(255, 255, 255, 0.34);
+}
+
+
+.story-impact-heading h3 {
+  margin: 0;
+
+  font-size:
+    clamp(
+      1.8rem,
+      3vw,
+      3rem
+    );
+
+  font-weight: 500;
+
+  color:
+    rgba(255, 255, 255, 0.95);
+}
+
+
+.story-impact-heading p {
+  margin:
+    0.85rem
+    auto
+    0;
+
+  max-width: 550px;
+
+  font-size: 0.86rem;
+  line-height: 1.65;
+
+  color:
+    rgba(255, 255, 255, 0.48);
+}
+
+
+/* Scenario comparison */
+
+.story-impact-comparison {
+  display: grid;
+
+  gap: 1.45rem;
+
+  max-width: 1150px;
+
+  margin: 0 auto;
+}
+
+
+.story-impact-row {
+  display: grid;
+
+  grid-template-columns:
+    minmax(175px, 0.9fr)
+    minmax(250px, 3fr)
+    minmax(150px, 1fr);
+
+  align-items: center;
+
+  gap: 1.25rem;
+}
+
+
+.story-impact-scenario {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.28rem;
+}
+
+
+.story-impact-scenario strong {
+  font-size: 0.76rem;
+  font-weight: 600;
+
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  color:
+    rgba(255, 255, 255, 0.88);
+}
+
+
+.story-impact-scenario span {
+  font-size: 0.72rem;
+
+  color:
+    rgba(255, 255, 255, 0.4);
+
+  font-variant-numeric:
+    tabular-nums;
+}
+
+
+/* Bars */
+
+.story-impact-bar-track {
+  position: relative;
+
+  height: 18px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background:
+    rgba(255, 255, 255, 0.075);
+}
+
+
+.story-impact-bar-fill {
+  height: 100%;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      90deg,
+      #4664ff 0%,
+      #9b6dff 55%,
+      #f07cc3 100%
+    );
+
+  transition:
+    width 180ms ease-out;
+}
+
+
+.story-impact-value {
+  text-align: right;
+
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  color:
+    rgba(255, 255, 255, 0.9);
+
+  font-feature-settings:
+    "tnum";
+
+  font-variant-numeric:
+    tabular-nums;
+}
+
+
+/* Slider */
+
+.story-daily-life-slider {
+  margin-top: 4rem;
+}
+
+
+.story-impact-scale-note {
+  margin:
+    1.1rem
+    auto
+    0;
+
+  max-width: 600px;
+
+  text-align: center;
+
+  font-size: 0.68rem;
+
+  color:
+    rgba(255, 255, 255, 0.3);
+}
+
+
+/* Responsive */
+
+@media (max-width: 900px) {
+
+  .story-impact-tabs {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+
+  .story-impact-row {
+    grid-template-columns:
+      1fr;
+    
+    gap: 0.6rem;
+
+    padding:
+      1rem
+      0;
+
+    border-bottom:
+      1px solid
+      rgba(255, 255, 255, 0.08);
+  }
+
+
+  .story-impact-value {
+    text-align: left;
+  }
+
+}
+
+
+@media (max-width: 540px) {
+
+  .story-impact-tabs {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+/* ── 2049 unlocked takeaway ─────────────────────────────────────────── */
+
+.story-impact-takeaway {
+  max-width: 920px;
+
+  margin:
+    3rem
+    auto
+    0;
+
+  padding:
+    1.5rem
+    1.65rem;
+
+  border-radius:
+    20px;
+
+  transition:
+    opacity 300ms ease,
+    border-color 300ms ease,
+    background 300ms ease,
+    transform 300ms ease;
+}
+
+
+.story-impact-takeaway-label {
+  display: block;
+
+  margin-bottom:
+    0.7rem;
+
+  font-size:
+    0.66rem;
+
+  font-weight: 600;
+
+  letter-spacing:
+    0.11em;
+
+  text-transform:
+    uppercase;
+}
+
+
+.story-impact-takeaway p {
+  margin: 0;
+
+  font-size:
+    0.88rem;
+
+  line-height: 1.75;
+}
+
+
+/* Before user reaches 2049 */
+
+.story-impact-takeaway--locked {
+  border:
+    1px dashed
+    rgba(255, 255, 255, 0.1);
+
+  background:
+    rgba(255, 255, 255, 0.018);
+
+  text-align: center;
+}
+
+
+.story-impact-takeaway--locked
+.story-impact-takeaway-label {
+  color:
+    rgba(255, 255, 255, 0.28);
+}
+
+
+.story-impact-takeaway--locked p {
+  color:
+    rgba(255, 255, 255, 0.32);
+}
+
+
+/* After user reaches 2049 */
+
+.story-impact-takeaway--unlocked {
+  border:
+    1px solid
+    rgba(155, 109, 255, 0.28);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(70, 100, 255, 0.08),
+      rgba(155, 109, 255, 0.07),
+      rgba(240, 124, 195, 0.05)
+    );
+
+  animation:
+    storyTakeawayReveal
+    420ms ease-out;
+}
+
+
+.story-impact-takeaway--unlocked
+.story-impact-takeaway-label {
+  color:
+    rgba(190, 170, 255, 0.82);
+}
+
+
+.story-impact-takeaway--unlocked p {
+  color:
+    rgba(255, 255, 255, 0.68);
+}
+
+
+@keyframes storyTakeawayReveal {
+
+  from {
+    opacity: 0;
+    transform:
+      translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      translateY(0);
+  }
+
+}
