@@ -28,6 +28,10 @@ const SCENARIOS = {
   overgrowth: {
     file: "/growth_overgrowth.geojson",
   },
+
+  degrowth: {
+  file: "/growth_degrowth.geojson",
+    },
 };
 
 

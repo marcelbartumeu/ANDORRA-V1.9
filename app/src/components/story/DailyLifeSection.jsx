@@ -34,6 +34,14 @@ const SCENARIOS = [
     timeseries:
       "/model/Overgrowth_timeseries.json",
   },
+
+  {
+  id: "degrowth",
+  label: "Degrowth",
+  timeseries:
+    "/model/Degrowth_timeseries.json",
+  },
+
 ];
 
 
@@ -406,207 +414,251 @@ export default function DailyLifeSection({
         scenarioData.overgrowth,
         END_YEAR
       );
+    
+    const degrowth =
+      findYear(
+        scenarioData.degrowth,
+        END_YEAR
+      );
 
 
     if (
       !continuity ||
       !density ||
+      !degrowth ||
       !overgrowth
     ) {
       return null;
     }
 
-
     if (
-      selectedKpiId ===
-      "education"
-    ) {
-      const overgrowthStudents =
-        Math.round(
-          overgrowth.SchoolStudents
-        );
+  selectedKpiId ===
+  "education"
+) {
+  const overgrowthStudents =
+    Math.round(
+      overgrowth.SchoolStudents
+    );
 
-      const continuityStudents =
-        Math.round(
-          continuity.SchoolStudents
-        );
+  const continuityStudents =
+    Math.round(
+      continuity.SchoolStudents
+    );
 
-      const densityStudents =
-        Math.round(
-          density.SchoolStudents
-        );
+  const densityStudents =
+    Math.round(
+      density.SchoolStudents
+    );
 
-
-      return {
-        label: "Education",
-
-        text:
-          `By 2049, Overgrowth reaches ${formatNumber(
-            overgrowthStudents
-          )} students — about ${formatNumber(
-            overgrowthStudents -
-              continuityStudents
-          )} more than Continuity and ${formatNumber(
-            overgrowthStudents -
-              densityStudents
-          )} more than Density. ` +
-
-          `The model corresponds to roughly ${Math.round(
-            overgrowth.SchoolSchools
-          )} schools under Overgrowth, compared with about ${Math.round(
-            continuity.SchoolSchools
-          )} under Continuity and ${Math.round(
-            density.SchoolSchools
-          )} under Density.`,
-      };
-    }
+  const degrowthStudents =
+    Math.round(
+      degrowth.SchoolStudents
+    );
 
 
-    if (
-      selectedKpiId ===
-      "healthcare"
-    ) {
-      const overgrowthBeds =
-        Math.round(
-          overgrowth.HospitalRequiredBeds
-        );
+  return {
+    label: "Education",
 
-      const continuityBeds =
-        Math.round(
-          continuity.HospitalRequiredBeds
-        );
+    text:
+      `By 2049, Overgrowth reaches ${formatNumber(
+        overgrowthStudents
+      )} students — about ${formatNumber(
+        overgrowthStudents -
+          continuityStudents
+      )} more than Continuity and ${formatNumber(
+        overgrowthStudents -
+          densityStudents
+      )} more than Density. ` +
 
-      const densityBeds =
-        Math.round(
-          density.HospitalRequiredBeds
-        );
+      `The model corresponds to roughly ${Math.round(
+        overgrowth.SchoolSchools
+      )} schools under Overgrowth, compared with about ${Math.round(
+        continuity.SchoolSchools
+      )} under Continuity and ${Math.round(
+        density.SchoolSchools
+      )} under Density. ` +
 
-
-      return {
-        label: "Healthcare",
-
-        text:
-          `Overgrowth creates the largest healthcare capacity requirement. ` +
-
-          `By 2049, the model requires about ${formatNumber(
-            overgrowthBeds
-          )} hospital beds, compared with ${formatNumber(
-            continuityBeds
-          )} under Continuity and ${formatNumber(
-            densityBeds
-          )} under Density. ` +
-
-          `That is roughly ${formatNumber(
-            overgrowthBeds -
-              continuityBeds
-          )} more beds than Continuity and ${formatNumber(
-            overgrowthBeds -
-              densityBeds
-          )} more than Density.`,
-      };
-    }
+      `Degrowth moves in the opposite direction, falling to about ${formatNumber(
+        degrowthStudents
+      )} students and roughly ${Math.round(
+        degrowth.SchoolSchools
+      )} modeled schools.`,
+  };
+}
 
 
-    if (
-      selectedKpiId ===
-      "energy"
-    ) {
-      const overgrowthEnergy =
-        overgrowth
-          .ElectricityDemand_kWh_year;
+if (
+  selectedKpiId ===
+  "healthcare"
+) {
+  const overgrowthBeds =
+    Math.round(
+      overgrowth.HospitalRequiredBeds
+    );
 
-      const continuityEnergy =
-        continuity
-          .ElectricityDemand_kWh_year;
+  const continuityBeds =
+    Math.round(
+      continuity.HospitalRequiredBeds
+    );
 
-      const densityEnergy =
-        density
-          .ElectricityDemand_kWh_year;
+  const densityBeds =
+    Math.round(
+      density.HospitalRequiredBeds
+    );
 
-
-      return {
-        label: "Energy",
-
-        text:
-          `By 2049, annual electricity demand reaches about ${formatMillions(
-            overgrowthEnergy
-          )} kWh under Overgrowth, compared with ${formatMillions(
-            continuityEnergy
-          )} kWh under Continuity and ${formatMillions(
-            densityEnergy
-          )} kWh under Density. ` +
-
-          `That makes Overgrowth demand roughly ${percentMore(
-            overgrowthEnergy,
-            continuityEnergy
-          )}% higher than Continuity and ${percentMore(
-            overgrowthEnergy,
-            densityEnergy
-          )}% higher than Density.`,
-      };
-    }
+  const degrowthBeds =
+    Math.round(
+      degrowth.HospitalRequiredBeds
+    );
 
 
-    if (
-      selectedKpiId ===
-      "mobility"
-    ) {
-      const overgrowthRoad =
-        overgrowth.RoadPerCapita_m;
+  return {
+    label: "Healthcare",
 
-      const continuityRoad =
-        continuity.RoadPerCapita_m;
+    text:
+      `Overgrowth creates the largest healthcare capacity requirement. ` +
 
-      const densityRoad =
-        density.RoadPerCapita_m;
+      `By 2049, the model requires about ${formatNumber(
+        overgrowthBeds
+      )} hospital beds, compared with ${formatNumber(
+        continuityBeds
+      )} under Continuity and ${formatNumber(
+        densityBeds
+      )} under Density. ` +
 
+      `That is roughly ${formatNumber(
+        overgrowthBeds -
+          continuityBeds
+      )} more beds than Continuity and ${formatNumber(
+        overgrowthBeds -
+          densityBeds
+      )} more than Density. ` +
 
-      return {
-        label: "Mobility",
-
-        text:
-          `The modeled road network remains highly constrained as population changes. ` +
-
-          `By 2049, Density provides about ${densityRoad.toFixed(
-            2
-          )} meters of road per resident, compared with ${continuityRoad.toFixed(
-            2
-          )} meters under Continuity and only ${overgrowthRoad.toFixed(
-            2
-          )} meters under Overgrowth. ` +
-
-          `Overgrowth therefore leaves about ${Math.round(
-            (1 -
-              overgrowthRoad /
-                densityRoad) *
-              100
-          )}% less road per resident than Density.`,
-      };
-    }
+      `Degrowth requires only about ${formatNumber(
+        degrowthBeds
+      )} beds by 2049, showing how strongly future healthcare demand follows the size of the population.`,
+  };
+}
 
 
-    if (
-      selectedKpiId ===
-      "gdp"
-    ) {
-      return {
-        label: "GDP",
+if (
+  selectedKpiId ===
+  "energy"
+) {
+  const overgrowthEnergy =
+    overgrowth
+      .ElectricityDemand_kWh_year;
 
-        text:
-          `The higher-growth future also produces much greater modeled economic output per resident. ` +
+  const continuityEnergy =
+    continuity
+      .ElectricityDemand_kWh_year;
 
-          `By 2049, GDP per capita reaches about ${formatEuro(
-            overgrowth.GDPpc
-          )} under Overgrowth, compared with ${formatEuro(
-            density.GDPpc
-          )} under Density and ${formatEuro(
-            continuity.GDPpc
-          )} under Continuity. ` +
+  const densityEnergy =
+    density
+      .ElectricityDemand_kWh_year;
 
-          `Density finishes with fewer residents than Continuity but higher GDP per capita, while Overgrowth combines the highest per-capita output with the greatest infrastructure demands shown across the other indicators.`,
-      };
-    }
+  const degrowthEnergy =
+    degrowth
+      .ElectricityDemand_kWh_year;
 
+
+  return {
+    label: "Energy",
+
+    text:
+      `By 2049, annual electricity demand reaches about ${formatMillions(
+        overgrowthEnergy
+      )} kWh under Overgrowth, compared with ${formatMillions(
+        continuityEnergy
+      )} kWh under Continuity and ${formatMillions(
+        densityEnergy
+      )} kWh under Density. ` +
+
+      `That makes Overgrowth demand roughly ${percentMore(
+        overgrowthEnergy,
+        continuityEnergy
+      )}% higher than Continuity and ${percentMore(
+        overgrowthEnergy,
+        densityEnergy
+      )}% higher than Density. ` +
+
+      `Degrowth falls to about ${formatMillions(
+        degrowthEnergy
+      )} kWh per year, the lowest demand of the four modeled futures.`,
+  };
+}
+
+
+if (
+  selectedKpiId ===
+  "mobility"
+) {
+  const overgrowthRoad =
+    overgrowth.RoadPerCapita_m;
+
+  const continuityRoad =
+    continuity.RoadPerCapita_m;
+
+  const densityRoad =
+    density.RoadPerCapita_m;
+
+  const degrowthRoad =
+    degrowth.RoadPerCapita_m;
+
+
+  return {
+    label: "Mobility",
+
+    text:
+      `The modeled road network remains highly constrained as population changes. ` +
+
+      `By 2049, Density provides about ${densityRoad.toFixed(
+        2
+      )} meters of road per resident, compared with ${continuityRoad.toFixed(
+        2
+      )} meters under Continuity and only ${overgrowthRoad.toFixed(
+        2
+      )} meters under Overgrowth. ` +
+
+      `Overgrowth therefore leaves about ${Math.round(
+        (1 -
+          overgrowthRoad /
+            densityRoad) *
+          100
+      )}% less road per resident than Density. ` +
+
+      `Degrowth produces the opposite effect: with fewer residents sharing the same modeled road network, road space rises to ${degrowthRoad.toFixed(
+        2
+      )} meters per person.`,
+  };
+}
+
+
+if (
+  selectedKpiId ===
+  "gdp"
+) {
+  return {
+    label: "GDP",
+
+    text:
+      `The higher-growth future also produces much greater modeled economic output per resident. ` +
+
+      `By 2049, GDP per capita reaches about ${formatEuro(
+        overgrowth.GDPpc
+      )} under Overgrowth, compared with ${formatEuro(
+        density.GDPpc
+      )} under Density and ${formatEuro(
+        continuity.GDPpc
+      )} under Continuity. ` +
+
+      `Density finishes with fewer residents than Continuity but higher GDP per capita, while Overgrowth combines the highest per-capita output with the greatest infrastructure demands shown across the other indicators. ` +
+
+      `Degrowth illustrates the economic side of that tradeoff: GDP per capita falls to about ${formatEuro(
+        degrowth.GDPpc
+      )}, the lowest of the four scenarios.`,
+  };
+}
 
     return null;
   }, [

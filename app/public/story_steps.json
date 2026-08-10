@@ -47,7 +47,8 @@
   "availableScenarios": [
     "Continuity",
     "Density",
-    "Overgrowth"
+    "Overgrowth",
+    "Degrowth"
   ],
   "year": 2026,
   "displayYear": 2026,
@@ -56,7 +57,8 @@
   "layers": [
     "growth_continuity",
     "growth_density",
-    "growth_overgrowth"
+    "growth_overgrowth",
+    "growth_degrowth"
   ],
   "kpis": [
     "Pop",

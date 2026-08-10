@@ -63,6 +63,22 @@ const SCENARIOS = [
     narrative:
       "Overgrowth represents the highest-growth future. Population and economic activity expand much faster, creating greater development pressure and substantially larger environmental impacts by the end of the model period.",
   },
+  {
+  id: "degrowth",
+
+  label: "Degrowth",
+
+  subtitle: "Population contraction",
+
+  timeseries:
+    "/model/Degrowth_timeseries.json",
+
+  narrativeTitle:
+    "If population and economic activity contract",
+
+  narrative:
+    "Degrowth represents a future in which Andorra's population declines over time. Demand on land and infrastructure falls, but the country also experiences substantially lower economic output and a smaller population base.",
+},
 ];
 
 
