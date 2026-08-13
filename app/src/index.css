@@ -2860,3 +2860,738 @@ body {
   }
 
 }
+
+/* ════════════════════════════════════════════════════════════════════════
+   CHOOSE ANDORRA'S FUTURE
+   ════════════════════════════════════════════════════════════════════════ */
+
+.story-choose-spider-value {
+  fill: rgba(255, 255, 255, 0.96);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.story-choose-spider-label {
+  fill: rgba(255, 255, 255, 0.72);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.story-choice-explorer {
+  width: 100%;
+  margin-top: 2rem;
+}
+
+
+.story-choice-intro {
+  max-width: 760px;
+
+  margin:
+    0
+    auto
+    3rem;
+
+  text-align: center;
+
+  font-size: 0.9rem;
+  line-height: 1.75;
+
+  color:
+    rgba(255, 255, 255, 0.5);
+}
+
+
+/* ── Controls ───────────────────────────────────────────────────────── */
+
+.story-choice-control-group {
+  max-width: 1000px;
+
+  margin:
+    0
+    auto
+    2rem;
+}
+
+
+.story-choice-control-label {
+  display: block;
+
+  margin-bottom: 0.8rem;
+
+  text-align: center;
+
+  font-size: 0.68rem;
+  font-weight: 600;
+
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  color:
+    rgba(255, 255, 255, 0.38);
+}
+
+
+.story-choice-buttons {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      4,
+      minmax(0, 1fr)
+    );
+
+  gap: 0.65rem;
+}
+
+
+.story-choice-button {
+  min-width: 0;
+
+  padding:
+    0.9rem
+    1rem;
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.1);
+
+  border-radius: 999px;
+
+  background:
+    rgba(10, 12, 18, 0.7);
+
+  color:
+    rgba(255, 255, 255, 0.48);
+
+  font: inherit;
+
+  font-size: 0.7rem;
+  font-weight: 600;
+
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+
+.story-choice-button:hover {
+  color:
+    rgba(255, 255, 255, 0.85);
+
+  border-color:
+    rgba(255, 255, 255, 0.24);
+
+  transform:
+    translateY(-1px);
+}
+
+
+.story-choice-button.is-active {
+  border-color:
+    rgba(255, 255, 255, 0.9);
+
+  background:
+    rgba(255, 255, 255, 0.94);
+
+  color: #05070c;
+}
+
+
+.story-choice-scenario-button {
+  position: relative;
+
+  overflow: hidden;
+}
+
+
+.story-choice-scenario-button::before {
+  content: "";
+
+  position: absolute;
+
+  left: 50%;
+  bottom: 0;
+
+  width: 42%;
+  height: 2px;
+
+  border-radius: 999px;
+
+  background:
+    var(--scenario-color);
+
+  opacity: 0.32;
+
+  transform:
+    translateX(-50%);
+
+  transition:
+    width 180ms ease,
+    opacity 180ms ease;
+}
+
+
+.story-choice-scenario-button.is-active::before {
+  width: 70%;
+  opacity: 1;
+}
+
+
+/* ── Loading / error ────────────────────────────────────────────────── */
+
+.story-choice-status {
+  max-width: 900px;
+
+  margin:
+    3rem
+    auto;
+
+  padding: 2rem;
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.09);
+
+  border-radius: 20px;
+
+  background:
+    rgba(10, 12, 18, 0.6);
+
+  text-align: center;
+
+  color:
+    rgba(255, 255, 255, 0.5);
+}
+
+
+.story-choice-status--error {
+  color:
+    rgba(255, 130, 130, 0.75);
+}
+
+
+/* ── Radar card ─────────────────────────────────────────────────────── */
+
+.story-radar-card {
+  width:
+    min(
+      920px,
+      100%
+    );
+
+  margin:
+    3.5rem
+    auto
+    0;
+
+  padding:
+    clamp(
+      1.5rem,
+      3vw,
+      2.4rem
+    );
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.1);
+
+  border-radius: 26px;
+
+  background:
+    rgba(8, 10, 16, 0.76);
+
+  backdrop-filter:
+    blur(20px);
+
+  -webkit-backdrop-filter:
+    blur(20px);
+
+  box-shadow:
+    0 24px 70px
+    rgba(0, 0, 0, 0.28);
+}
+
+
+.story-radar-heading {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  margin-bottom: 0.5rem;
+}
+
+
+.story-radar-heading span {
+  font-size: 0.72rem;
+  font-weight: 600;
+
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  color:
+    rgba(255, 255, 255, 0.72);
+}
+
+
+.story-radar-heading strong {
+  font-size: 0.75rem;
+  font-weight: 600;
+
+  color:
+    rgba(255, 255, 255, 0.35);
+}
+
+
+/* ── Radar SVG ──────────────────────────────────────────────────────── */
+
+.story-radar-chart {
+  width:
+    min(
+      620px,
+      100%
+    );
+
+  margin:
+    0
+    auto;
+}
+
+
+.story-radar-svg {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  overflow: visible;
+
+  animation:
+    storyRadarChange
+    280ms
+    ease-out;
+}
+
+
+@keyframes storyRadarChange {
+  from {
+    opacity: 0.3;
+
+    transform:
+      scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      scale(1);
+  }
+}
+
+
+.story-radar-grid-ring {
+  fill:
+    rgba(255, 255, 255, 0.012);
+
+  stroke:
+    rgba(255, 255, 255, 0.11);
+
+  stroke-width: 1;
+}
+
+
+.story-radar-axis-line {
+  stroke:
+    rgba(255, 255, 255, 0.11);
+
+  stroke-width: 1;
+}
+
+
+.story-radar-scenario {
+  vector-effect:
+    non-scaling-stroke;
+
+  stroke-linejoin: round;
+
+  transition:
+    opacity 220ms ease,
+    fill-opacity 220ms ease,
+    stroke-opacity 220ms ease;
+}
+
+
+.story-radar-scenario--ghost {
+  stroke-width: 1.5;
+
+  stroke-opacity: 0.28;
+
+  opacity: 0.72;
+}
+
+
+.story-radar-scenario--selected {
+  stroke-width: 3;
+
+  stroke-opacity: 1;
+
+  fill-opacity: 0.18;
+
+  opacity: 1;
+}
+
+
+.story-radar-selected-point {
+  stroke:
+    rgba(5, 7, 12, 0.9);
+
+  stroke-width: 2;
+
+  vector-effect:
+    non-scaling-stroke;
+}
+
+
+.story-radar-axis-label {
+  fill:
+    rgba(255, 255, 255, 0.56);
+
+  font-family:
+    var(--font);
+
+  font-size: 10px;
+  font-weight: 600;
+
+  letter-spacing: 0.06em;
+}
+
+
+/* ── Scenario legend ────────────────────────────────────────────────── */
+
+.story-radar-legend {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex-wrap: wrap;
+
+  gap:
+    0.75rem
+    1.25rem;
+
+  margin-top: 0.5rem;
+}
+
+
+.story-radar-legend-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.45rem;
+
+  font-size: 0.68rem;
+
+  color:
+    rgba(255, 255, 255, 0.32);
+
+  transition:
+    color 180ms ease,
+    opacity 180ms ease;
+}
+
+
+.story-radar-legend-item.is-selected {
+  color:
+    rgba(255, 255, 255, 0.88);
+}
+
+
+.story-radar-legend-line {
+  width: 18px;
+  height: 2px;
+
+  border-radius: 999px;
+
+  opacity: 0.35;
+}
+
+
+.story-radar-legend-item.is-selected
+.story-radar-legend-line {
+  height: 3px;
+
+  opacity: 1;
+}
+
+
+/* ── Radar explanation ──────────────────────────────────────────────── */
+
+.story-radar-note {
+  max-width: 650px;
+
+  margin:
+    1.4rem
+    auto
+    0;
+
+  text-align: center;
+
+  font-size: 0.66rem;
+  line-height: 1.55;
+
+  color:
+    rgba(255, 255, 255, 0.28);
+}
+
+
+.story-radar-blurb {
+  max-width: 760px;
+
+  margin:
+    2rem
+    auto
+    0;
+
+  padding-top: 1.6rem;
+
+  border-top:
+    1px solid
+    rgba(255, 255, 255, 0.08);
+}
+
+
+.story-radar-blurb p {
+  margin: 0;
+
+  text-align: center;
+
+  font-size:
+    clamp(
+      0.9rem,
+      1.25vw,
+      1.05rem
+    );
+
+  line-height: 1.8;
+
+  color:
+    rgba(255, 255, 255, 0.66);
+}
+
+
+/* ── Price of this future ───────────────────────────────────────────── */
+
+.story-price-card {
+  width:
+    min(
+      920px,
+      100%
+    );
+
+  margin:
+    1.5rem
+    auto
+    0;
+
+  padding:
+    clamp(
+      1.4rem,
+      3vw,
+      2rem
+    );
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.09);
+
+  border-radius: 22px;
+
+  background:
+    rgba(255, 255, 255, 0.035);
+}
+
+
+.story-price-heading {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  margin-bottom: 1.6rem;
+
+  text-align: center;
+}
+
+
+.story-price-heading span {
+  margin-bottom: 0.45rem;
+
+  font-size: 0.66rem;
+  font-weight: 600;
+
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  color:
+    rgba(170, 190, 230, 0.65);
+}
+
+
+.story-price-heading strong {
+  font-size: 0.82rem;
+  font-weight: 600;
+
+  color:
+    rgba(255, 255, 255, 0.76);
+}
+
+
+.story-price-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: 1rem;
+}
+
+
+.story-price-column {
+  padding: 1.35rem;
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.07);
+
+  border-radius: 16px;
+
+  background:
+    rgba(5, 7, 12, 0.32);
+}
+
+
+.story-price-column-label {
+  display: block;
+
+  margin-bottom: 0.9rem;
+
+  font-size: 0.66rem;
+  font-weight: 600;
+
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+
+  color:
+    rgba(255, 255, 255, 0.4);
+}
+
+
+.story-price-column p {
+  margin: 0;
+
+  font-size: 0.8rem;
+  line-height: 1.65;
+
+  color:
+    rgba(255, 255, 255, 0.5);
+}
+
+
+.story-price-column p + p {
+  margin-top: 0.8rem;
+
+  padding-top: 0.8rem;
+
+  border-top:
+    1px solid
+    rgba(255, 255, 255, 0.06);
+}
+
+
+.story-price-column p strong {
+  font-weight: 600;
+
+  color:
+    rgba(255, 255, 255, 0.78);
+}
+
+
+/* ── Responsive ─────────────────────────────────────────────────────── */
+
+@media (max-width: 820px) {
+
+  .story-choice-buttons {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+
+  .story-radar-card {
+    padding:
+      1.4rem
+      1rem;
+  }
+
+
+  .story-radar-axis-label {
+    font-size: 9px;
+  }
+
+
+  .story-price-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+}
+
+
+@media (max-width: 520px) {
+
+  .story-choice-buttons {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .story-radar-heading {
+    flex-direction:
+      column;
+
+    align-items:
+      flex-start;
+  }
+
+
+  .story-radar-legend {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+}
