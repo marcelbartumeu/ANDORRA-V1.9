@@ -44,6 +44,7 @@ from pipeline.population.synthesizer import (
     PopulationSynthesizer,
     ANDORRA_NATIONALITY_DIST,
 )
+from config import ACTIVE_CONFIG
 
 OUTPUT_DIR = Path(__file__).parent.parent / "pipeline_output"
 
@@ -172,6 +173,7 @@ def run(use_api: bool = True):
     synthesiser = PopulationSynthesizer(
         nationality_dist=ANDORRA_NATIONALITY_DIST,
         age_sex_structure=age_sex,
+        household_dist=ACTIVE_CONFIG.household_type_distribution,
     )
     sample_profiles = synthesiser.generate(n=10)
 

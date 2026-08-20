@@ -103,7 +103,7 @@ def _make_seed(nat: str, age_group: str, income: str, rng: np.random.Generator) 
     hh_weights = _normalize(list(ACTIVE_CONFIG.household_type_distribution.values()))
     household_type = rng.choice(hh_labels, p=hh_weights)
     marital_status = "married" if household_type.startswith("couple") else "single"
-    if "with_children" in household_type:
+    if "with_children" in household_type or household_type == "single_parent":
         child_labels = [k for k in ACTIVE_CONFIG.children_distribution.keys() if k != "0"]
         if child_labels:
             child_weights = _normalize([ACTIVE_CONFIG.children_distribution[k] for k in child_labels])

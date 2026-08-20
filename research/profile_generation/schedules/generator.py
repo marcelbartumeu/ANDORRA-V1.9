@@ -57,7 +57,8 @@ def _travel_duration(dist_km: float, mode: str) -> float:
 _TOUR_GAP_MIN = 60.0
 
 
-def _build_chain(agent_id, home, intents, grid, pick_mode):
+def _build_chain(agent_id, home, intents, grid, pick_mode,
+                  start_loc=None, start_free=0.0, prefix_trips=None):
     """Build a COHERENT trip chain from time-ordered activity intents.
 
     Each intent: {type, dest, dwell, dep_pref, poi}. Trips chain location→location
@@ -68,10 +69,10 @@ def _build_chain(agent_id, home, intents, grid, pick_mode):
     independent departure times produced overlapping, teleporting trips.
     """
     intents = sorted(intents, key=lambda a: a["dep_pref"])
-    trips: list[Trip] = []
+    trips: list[Trip] = list(prefix_trips) if prefix_trips else []
     history: list[tuple[str, float, int]] = []
-    loc  = home
-    free = 0.0   # minute the agent becomes free at its current location
+    loc  = start_loc if start_loc is not None else home
+    free = start_free  # minute the agent becomes free at its current location
 
     def add(origin, activity, dest, dep, poi=None, state_before=None):
         """Append a trip and return its arrival minute, or None if it cannot fit in
@@ -220,15 +221,33 @@ def generate_schedules(
             intents.append({"type": "work", "dest": wdest, "dwell": float(rng.normal(dm, ds)),
                             "dep_pref": work_dep, "poi": lookup.sample(wdest, "work", rng)})
 
-        # Escort → school drop-off; scheduled just before the work commute so the
-        # chain runs home → school (drop) → work rather than a separate round trip.
+        ## ETMO: Escort Trip Mandatory Override (Recker 1995 HAPP, simplified to a
+        # deterministic rule per Rezvany et al. 2023 -- full MILP is computationally
+        # impractical at 90K-agent scale; design doc §2.3). If this agent is the
+        # primary guardian of a school-age dependent, the escort trip is forced into
+        # the schedule FIRST -- inserted directly as trip #1, not passed through
+        # _build_chain's soft fit-check, so it cannot be silently dropped.
+        # Mode is car (design doc Q2 default for V3.0 -- no school-proximity data
+        # sourced yet to support Bhat et al. 2007's distance/income mode split;
+        # revisit if that becomes available).
+        escort_start_loc, escort_start_free = home, 0.0
+        escort_prefix = None
         if agent_id in escort_target:
             dm, ds = _DWELL["escort"]
             edep = float(np.clip(rng.normal(485, 15), 420, 540))
             if work_dep is not None:
                 edep = min(edep, work_dep - 15.0)
-            intents.append({"type": "escort", "dest": escort_target[agent_id],
-                            "dwell": float(rng.normal(dm, ds)), "dep_pref": edep, "poi": None})
+            edest = escort_target[agent_id]
+            edist = grid.distance_km(home, edest)
+            edur  = _travel_duration(edist, "car")
+            escort_trip = Trip(
+                agent_id=agent_id, activity_type="escort", origin_h3=home, dest_h3=edest,
+                mode="car", departure_min=max(edep, 0.0), duration_min=edur,
+                poi_name="", poi_lat=None, poi_lon=None,
+            )
+            escort_prefix = [escort_trip]
+            escort_start_loc = edest
+            escort_start_free = escort_trip.departure_min + escort_trip.duration_min + float(rng.normal(dm, ds))
 
         # Discretionary activities (gravity from home, parenthood β)
         for activity in ("education", "grocery", "shopping", "leisure_indoor", "leisure_outdoor",
@@ -243,7 +262,78 @@ def generate_schedules(
                                                              profile=agent, rng=rng),
                                 "poi": lookup.sample(dest, activity, rng)})
 
-        trips = _build_chain(agent_id, home, intents, grid, adult_mode)
+        trips = _build_chain(agent_id, home, intents, grid, adult_mode,
+                             start_loc=escort_start_loc, start_free=escort_start_free,
+                             prefix_trips=escort_prefix)
         schedules.append(DailySchedule(agent_id=agent_id, home_h3=home, trips=trips))
 
     return schedules
+
+# ── MSUM: Joint Tour Probability for Coupled Agents (V3.0, design doc Sec 2.2) ──
+#
+# U_HH_joint - U_HH_solo = gamma exactly (the lambda-weighted U_i(a)/U_j(a) terms
+# appear in both sides and cancel), so P(joint) = 1/(1+exp(-gamma)) is the same
+# fixed probability for every coupled leisure trip -- gamma (0.10, Meister et al.
+# 2005) is a flat constant in the source citation, not activity- or agent-dependent.
+#
+# Scope: leisure_indoor / leisure_outdoor only -- the closest real proxies to the
+# design doc's D16/D21/D22/D23 cluster. generator.py has no "restaurant"/"cafe"/
+# "bar" trip type (place_preferences.py's 26 D-layers don't map onto the
+# discretionary-trip taxonomy used here); D19 daycare is out of scope, already
+# handled by ETMO's escort logic, not the discretionary loop.
+#
+# Runs POST-HOC on already-built schedules: does not create new trips, only merges
+# a same-day leisure_indoor/leisure_outdoor trip pair (one per partner) into a
+# single shared destination/time when the joint draw succeeds.
+
+_JOINT_ACTIVITY_TYPES = {"leisure_indoor", "leisure_outdoor"}
+
+
+def apply_msum_joint_tours(
+    schedules: list[DailySchedule],
+    households: list[dict],
+    rng_seed: int = 42,
+) -> int:
+    """MSUM Step 4c: merge coupled agents' independent leisure trips into joint
+    tours with probability 1/(1+exp(-gamma)). Mutates schedules in place. Returns
+    count of trips converted to joint."""
+    from households import _GAMMA_JOINT  # local import, avoids circular dependency
+
+    rng = np.random.default_rng(rng_seed + 13)
+    p_joint = 1.0 / (1.0 + np.exp(-_GAMMA_JOINT))
+
+    by_agent = {s.agent_id: s for s in schedules}
+    n_joint = 0
+
+    for hh in households:
+        if hh["composition"] not in ("couple_no_children", "couple_with_children"):
+            continue
+        partner_ids = [mid for mid in hh["member_ids"]
+                       if hh["member_roles"].get(mid) in ("head", "partner")]
+        if len(partner_ids) != 2:
+            continue
+        s_a, s_b = by_agent.get(partner_ids[0]), by_agent.get(partner_ids[1])
+        if s_a is None or s_b is None:
+            continue
+
+        trips_a = [t for t in s_a.trips if t.activity_type in _JOINT_ACTIVITY_TYPES]
+        trips_b = [t for t in s_b.trips if t.activity_type in _JOINT_ACTIVITY_TYPES]
+
+        for ta in trips_a:
+            matched = False
+            for tb in trips_b:
+                if tb.dest_h3 == ta.dest_h3 and tb.departure_min == ta.departure_min:
+                    matched = True
+                    break
+            if matched or not trips_b:
+                continue
+            if rng.random() < p_joint:
+                tb = trips_b[0]
+                tb.dest_h3 = ta.dest_h3
+                tb.origin_h3 = ta.origin_h3
+                tb.mode = ta.mode
+                tb.departure_min = ta.departure_min
+                tb.duration_min = ta.duration_min
+                n_joint += 1
+
+    return n_joint

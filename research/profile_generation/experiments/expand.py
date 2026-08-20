@@ -310,7 +310,7 @@ def _expand_one(
             seed["age"], seed["income_bracket"], rng
         )
     if "household_composition" not in profile:
-        profile["household_composition"] = _sample_household_composition(
+        profile["household_composition"] = _hfm_household_composition(
             seed["age"], seed["income_bracket"], rng
         )
 
@@ -548,6 +548,71 @@ def _sample_employment_status(age: int, income_bracket: str, rng: np.random.Gene
     idx = int(rng.choice(len(statuses), p=w / w.sum()))
     return statuses[idx]
 
+# ── HFM: Household Formation Model (V3.0) ────────────────────────────────────
+# Billari et al. 2007 conditional logit. U_ih = alpha_h + beta_h*x_i + eps_ih,
+# eps_ih ~ i.i.d. Gumbel(0,1) -> closed-form softmax choice probability.
+#
+# beta_h: NOT YET AVAILABLE. No demographic-conditioned coefficients exist in
+# the current data-sourcing sheet -- only population-level baseline shares
+# (alpha_h). Until real beta_h estimates are sourced (Billari et al. 2007 or
+# Andorra-specific data), this is an intercept-only logit: P(H=h) reduces to
+# a fixed categorical draw at the EU-wide baseline shares below. income_bracket
+# is accepted below for call-site compatibility only -- it has no effect yet.
+#
+# Source: Eurostat "Household composition statistics" (EU-wide, 2025 proxy --
+# NOT Andorra-specific). Cross-checked against the "has children" EU average
+# (23.4%): couple_with_children + single_with_children = 18.6% + 3.8% = 22.4%,
+# consistent within survey noise.
+#
+# Age-band hard gate: youth (<30) and senior (60+) cannot be assigned
+# couple_with_children or single_with_children. This is a structural
+# eligibility constraint (encoded as -inf utility), not a beta_h effect --
+# assemble_households() in households.py pairs whatever label it receives
+# without re-checking age plausibility, so this guards against e.g. a
+# 90-year-old being paired with a partner and 1-3 assigned children.
+
+_HFM_ALPHA_H: dict[str, float] = {
+    "couple_with_children": np.log(0.186),
+    "couple_no_children":   np.log(0.303),
+    "single_with_children": np.log(0.038),
+    "single_no_children":   np.log(0.473),
+}
+
+_HFM_TO_SIX_CATEGORY = {
+    "couple_with_children": "couple_with_children",
+    "couple_no_children":   "couple_no_children",
+    "single_with_children": "single_parent",
+}
+_SINGLE_NO_CHILDREN_SPLIT = {
+    "single":               0.625,
+    "shared_accommodation": 0.25,
+    "multi_generational":   0.125,
+}
+
+
+def _hfm_household_composition(age: int, income_bracket: str, rng: np.random.Generator) -> str:
+    band = _age_band(age)
+    types = list(_HFM_ALPHA_H.keys())
+    alphas = np.array([_HFM_ALPHA_H[t] for t in types])
+
+    if band in ("youth", "senior"):
+        ineligible = {"couple_with_children", "single_with_children"}
+        alphas = np.array([
+            a if t not in ineligible else -np.inf
+            for t, a in zip(types, alphas)
+        ])
+
+    w = np.exp(alphas - np.max(alphas[np.isfinite(alphas)]))
+    p = w / w.sum()
+
+    h4 = types[int(rng.choice(len(types), p=p))]
+
+    if h4 == "single_no_children":
+        labels = list(_SINGLE_NO_CHILDREN_SPLIT.keys())
+        weights = np.array(list(_SINGLE_NO_CHILDREN_SPLIT.values()))
+        return labels[int(rng.choice(len(labels), p=weights))]
+
+    return _HFM_TO_SIX_CATEGORY[h4]
 
 def _sample_household_composition(age: int, income_bracket: str, rng: np.random.Generator) -> str:
     band  = _age_band(age)

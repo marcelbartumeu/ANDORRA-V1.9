@@ -125,6 +125,12 @@ def main():
     print(f"  {len(hholds):,} households, mean size {sizes.mean():.2f}, "
           f"median {int(np.median(sizes))}, housing burden mean {burden.mean():.2f} "
           f"in {time.time()-t1:.1f}s")
+    n_pce = HH.apply_pce(population, hholds)
+    print(f"  PCE: psychometric correlation extension applied to {n_pce:,} coupled agents")
+    n_msum = HH.apply_msum_lambda(population, hholds)
+    print(f"  MSUM: lambda_bargaining assigned to {n_msum:,} coupled agents")
+    n_msum_pref = HH.apply_msum_married_deltas(population, hholds)
+    print(f"  MSUM: married place-preference deltas (PLACEHOLDER magnitudes) applied to {n_msum_pref:,} coupled agents")
 
     # ── Phase 3: social network ──────────────────────────────────────────────────
     print(f"\nPhase 3 — Social network (4 layers)...")
@@ -139,6 +145,9 @@ def main():
     print(f"\nPhase 4 — Daily schedules (anchors + child + escort + parenthood)...")
     t3 = time.time()
     schedules = generate_schedules(population, rng_seed=RNG_SEED, households=hholds)
+    from schedules.generator import apply_msum_joint_tours
+    n_joint = apply_msum_joint_tours(schedules, hholds, rng_seed=RNG_SEED)
+    print(f"  MSUM: {n_joint:,} leisure trips converted to joint tours (p={1/(1+2.71828**-0.10):.3f})")
     total_trips = sum(len(s.trips) for s in schedules)
     outbound = sum(1 for s in schedules for t in s.trips if t.activity_type != "home")
     print(f"  {total_trips:,} trips ({outbound:,} outbound) in {time.time()-t3:.1f}s")

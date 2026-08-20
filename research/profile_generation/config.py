@@ -69,11 +69,11 @@ class CountryConfig:
     median_age: float
     working_age_pct: float  # 15–64 as % of total
 
-    # — Household structure (PLACEHOLDER - replace with EPF/SAIG 2023 + Registre Civil data)
+    # — Household structure (PLACEHOLDER — replace with EPF/SAIG 2023 + Registre Civil data)
+    # Canonicalized to match expand.py's _HOUSEHOLD_WEIGHTS categories (2026-08-06 taxonomy fix)
     household_type_distribution: dict[str, float]
-    # Format: {household_type: proportion}, must sum to 1.0
-    # Categories: couple_with_children, couple_no_children, single_with_children, single_no_children
-
+    # Format: {type: proportion}, must sum to 1.0
+    # Categories: single, couple_no_children, couple_with_children, single_parent, shared_accommodation, multi_generational
     children_distribution: dict[str, float]
     # Format: {"0": proportion, "1": proportion, "2": proportion, "3+": proportion}
 
@@ -354,10 +354,12 @@ ANDORRA = CountryConfig(
     naturalisation_years=20,
     # — Household structure (PLACEHOLDER - replace with EPF/SAIG 2023 + Registre Civil data)
     household_type_distribution={
-        "couple_with_children": 0.25,
-        "couple_no_children": 0.25,
-        "single_with_children": 0.10,
-        "single_no_children": 0.40,
+    "couple_with_children": 0.25,
+    "couple_no_children":   0.25,
+    "single_parent":        0.10,   # was single_with_children
+    "single":                0.25,   # split from single_no_children (0.40) — placeholder
+    "shared_accommodation": 0.10,   # split from single_no_children — placeholder
+    "multi_generational":   0.05,   # split from single_no_children — placeholder
     },
     children_distribution={
         "0": 0.55,

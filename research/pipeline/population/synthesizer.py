@@ -155,6 +155,10 @@ INCOME_BY_OCCUPATION: dict[str, str] = {
     "other_service":        "lower_middle",
 }
 
+# Fallback only — used if no household_dist is passed to PopulationSynthesizer.
+# Both call sites (run_population.py's expand.py path and demo_andorra.py) now pass
+# ACTIVE_CONFIG.household_type_distribution explicitly (2026-08-06 taxonomy fix),
+# so this should never actually fire in practice. Kept for safety, not canonical.
 HOUSEHOLD_TYPES = [
     ("single",               0.28),
     ("couple_no_kids",       0.18),

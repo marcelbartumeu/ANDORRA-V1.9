@@ -335,3 +335,221 @@ def assign_anchors_and_economics(
             "has_young_children": any(m.get("is_minor") and m["age"] < 6 for m in members),
         })
         h.pop("_head_id", None)
+
+     # households.py — PCE: Psychometric Correlation Extension (V3.0 household extension)
+#
+# Applied AFTER assemble_households() + assign_anchors_and_economics(), since it
+# requires household_role and household_composition to already be set.
+#
+# Fields use the same dotted-path convention as schema.py's NUMERICAL_FIELDS
+# (e.g. "personality.agreeableness", "economic.financial_stress").
+#
+# Two of the four deltas from the original research design don't map onto real
+# schema fields and were adapted here:
+#   - Schwartz values are a ranked top-3 list of strings, not scored floats.
+#     "high v_benevolence" is approximated as a step function on rank.
+#   - There is no standalone "housing_salience" field. The closest real proxy
+#     is issue_salience.housing (political salience of the housing issue),
+#     which is related but not identical in meaning to general housing-market
+#     pressure. Flagged here as a proxy, not an exact substitution.
+#
+# Citations: Mazzocco 2007; Schwartz 1992 + Bhat et al. 2007; McCrae & Costa 2003;
+# EPF 2020 + SAIG 2023.
+
+
+_BENEVOLENCE_WEIGHT = {"primary": 1.0, "secondary": 0.67, "tertiary": 0.33}
+
+
+def _get_path(d: dict, path: str, default=None):
+    """Read a dotted path like 'economic.financial_stress' from a nested dict."""
+    parts = path.split(".")
+    cur = d
+    for p in parts:
+        if not isinstance(cur, dict) or p not in cur:
+            return default
+        cur = cur[p]
+    return cur
+
+
+def _set_path(d: dict, path: str, value) -> None:
+    """Write a dotted path like 'economic.financial_stress' into a nested dict."""
+    parts = path.split(".")
+    cur = d
+    for p in parts[:-1]:
+        cur = cur.setdefault(p, {})
+    cur[parts[-1]] = value
+
+
+def apply_pce(population: list[dict], households: list[dict]) -> int:
+    """
+    Apply the 4 PCE deltas to coupled agents only (household_role in head/partner
+    within couple_no_children / couple_with_children households).
+    Mutates population in place. Returns count of agents affected.
+    """
+    by_id = {a["agent_id"]: a for a in population}
+    n_affected = 0
+
+    for hh in households:
+        if hh["composition"] not in ("couple_no_children", "couple_with_children"):
+            continue
+
+        partners = [by_id[mid] for mid in hh["member_ids"]
+                    if hh["member_roles"].get(mid) in ("head", "partner")
+                    and mid in by_id]
+        if len(partners) != 2:
+            continue  # skip incomplete/malformed households
+
+        a, b = partners
+        for agent, partner in ((a, b), (b, a)):
+
+            # 1. Partner has high income -> own financial_stress DOWN
+            #    [Mazzocco 2007]
+            fs = _get_path(agent, "economic.financial_stress")
+            p_income = partner.get("income_bracket")
+            if fs is not None and p_income in _INCOME_RANK:
+                p_rank_norm = _INCOME_RANK[p_income] / 6.0
+                new_fs = float(np.clip(fs - 0.10 * p_rank_norm, 0.0, 1.0))
+                _set_path(agent, "economic.financial_stress", new_fs)
+
+            # 2. High v_benevolence -> escort_willingness UP
+            #    [Schwartz 1992; Bhat et al. 2007]
+            #    Schwartz values are a ranked top-3 list, not a score -- approximated
+            #    as a step function on rank (primary=1.0, secondary=0.67, tertiary=0.33).
+            sv = agent.get("schwartz_values", {})
+            bw = 0.0
+            for rank_key, weight in _BENEVOLENCE_WEIGHT.items():
+                if sv.get(rank_key) == "benevolence":
+                    bw = weight
+                    break
+            if bw > 0.0:
+                agent.setdefault("escort_willingness", 0.5)
+                agent["escort_willingness"] = float(np.clip(
+                    agent["escort_willingness"] + 0.12 * bw, 0.0, 1.0))
+
+            # 3. High agreeableness -> joint_activity_rate UP
+            #    [McCrae & Costa 2003]
+            agree = _get_path(agent, "personality.agreeableness")
+            if agree is not None:
+                agent.setdefault("joint_activity_rate", 0.5)
+                agent["joint_activity_rate"] = float(np.clip(
+                    agent["joint_activity_rate"] + 0.10 * agree, 0.0, 1.0))
+
+            # 4. High housing salience -> coupled_residential_search UP
+            #    [EPF 2020; SAIG 2023]
+            #    PROXY: no standalone housing_salience field exists; using
+            #    issue_salience.housing (political salience) as the closest
+            #    available substitute. Not an exact match to the original design.
+            hs = _get_path(agent, "issue_salience.housing")
+            if hs is not None:
+                agent.setdefault("coupled_residential_search", 0.5)
+                agent["coupled_residential_search"] = float(np.clip(
+                    agent["coupled_residential_search"] + 0.15 * hs, 0.0, 1.0))
+
+            n_affected += 1
+
+    return n_affected   
+
+# ── MSUM: Marital Status Utility Modifier (V3.0) -- lambda_i (bargaining weight) ──
+#
+# Design doc Sec 2.2: U_HH(a) = lambda_i*U_i(a) + lambda_j*U_j(a) + gamma*1[joint(a)]
+# For singles: U_HH(a) = U_i(a) -- no change, backward compatible (doc Sec 2.2).
+#
+# This function computes lambda_i only. gamma is NOT agent-derived -- it's a fixed
+# constant (Meister et al. 2005, via Rezvany, Bierlaire & Hillel 2023 Table 6,
+# alpha_jnt = 0.1), used later by the joint-tour probability logic in generator.py,
+# not something to attach per-agent here.
+#
+# lambda_i = agent i's income / total household income (design doc, exact formula --
+# no proxy needed; real per-agent income already exists via _INCOME_NET above).
+
+_GAMMA_JOINT = 0.10  # Meister et al. 2005, via Rezvany et al. 2023, Table 6 (alpha_jnt)
+
+
+def apply_msum_lambda(population: list[dict], households: list[dict]) -> int:
+    """
+    Attaches `lambda_bargaining` to each partner in a couple household.
+    Runs on the same trigger condition as apply_pce(). Returns count of agents affected.
+    """
+    by_id = {a["agent_id"]: a for a in population}
+    n_affected = 0
+
+    for hh in households:
+        if hh["composition"] not in ("couple_no_children", "couple_with_children"):
+            continue
+
+        partners = [by_id[mid] for mid in hh["member_ids"]
+                    if hh["member_roles"].get(mid) in ("head", "partner")
+                    and mid in by_id]
+        if len(partners) != 2:
+            continue  # skip incomplete/malformed households, same guard as apply_pce()
+
+        a, b = partners
+        inc_a = _INCOME_NET.get(a.get("income_bracket", "middle"), 2150)
+        inc_b = _INCOME_NET.get(b.get("income_bracket", "middle"), 2150)
+        total = inc_a + inc_b
+        if total <= 0:
+            continue
+
+        a["lambda_bargaining"] = round(inc_a / total, 3)
+        b["lambda_bargaining"] = round(inc_b / total, 3)
+        n_affected += 2
+
+    return n_affected
+# ── MSUM: Married RUM Predictor (V3.0) -- place_preferences deltas ───────────
+#
+# Design doc Sec 2.2 specifies married as a direct RUM beta predictor for five
+# destination layers (D21, D22, D16, D19, D23), with DIRECTION grounded in
+# Koppelman & Bhat (2006) / MTUS W6 -- but no MAGNITUDE given, and the actual
+# codebase has no RUM beta mechanism to insert into (place_preferences.py
+# replaced that architecture with LLM-generated + validated preferences; see
+# its module docstring). Implemented here instead as an additive delta
+# correction, same pattern as apply_pce()'s four deltas, applied post-hoc to
+# place_preferences for coupled agents.
+#
+# PLACEHOLDER MAGNITUDES -- directions are from the design doc's citation
+# (Koppelman & Bhat 2006; MTUS W6), sizes are NOT sourced from either and are
+# set here in the same range as PCE's existing deltas (0.05-0.12) purely as a
+# reasonable placeholder. Replace with real coefficients if/when available.
+#
+# D4 Commercial is explicitly excluded -- the design doc describes it as an
+# "interaction with work" (coupled commute / car-sharing scheduling), not a
+# direct additive predictor like the other five. Left unresolved, not guessed.
+
+_MARRIED_DELTAS: dict[str, float] = {
+    "D21": +0.08,   # Restaurant -- joint leisure more common in couples [Koppelman & Bhat 2006]
+    "D22": +0.06,   # Cafe -- joint discretionary trips [MTUS W6, Gershuny & Fisher 2014]
+    "D16": +0.06,   # Recreation -- coupled joint tours [Vo et al. 2020]
+    "D19": +0.05,   # Daycare -- dual-earner escort duties [Bhat et al. 2007]
+    "D23": -0.05,   # Bar -- lower solo bar attendance in couple households [GS97]
+}
+
+
+def apply_msum_married_deltas(population: list[dict], households: list[dict]) -> int:
+    """
+    Applies placeholder married-status deltas to place_preferences for coupled
+    agents. Same trigger condition as apply_pce() / apply_msum_lambda(). Returns
+    count of agents affected.
+    """
+    by_id = {a["agent_id"]: a for a in population}
+    n_affected = 0
+
+    for hh in households:
+        if hh["composition"] not in ("couple_no_children", "couple_with_children"):
+            continue
+
+        partners = [by_id[mid] for mid in hh["member_ids"]
+                    if hh["member_roles"].get(mid) in ("head", "partner")
+                    and mid in by_id]
+        if len(partners) != 2:
+            continue
+
+        for agent in partners:
+            prefs = agent.get("place_preferences")
+            if not prefs:
+                continue
+            for did, delta in _MARRIED_DELTAS.items():
+                if did in prefs:
+                    prefs[did] = round(float(np.clip(prefs[did] + delta, 0.01, 0.99)), 3)
+            n_affected += 1
+
+    return n_affected
