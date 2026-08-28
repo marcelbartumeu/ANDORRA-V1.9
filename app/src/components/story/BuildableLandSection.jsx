@@ -1,107 +1,244 @@
-import { Fragment, useState } from "react";
-
-import BuildableLandMap from "./BuildableLandMap";
-
 import {
-  NarrativeCard,
-} from "./StoryShared";
+  useState,
+} from "react";
+
+import BuildableLandMap, {
+  BUILDABLE_LAND_COLORS,
+} from "./BuildableLandMap";
 
 
-const MAP_STAGES = [
-  "Total land",
-  "Protected land",
-  "Steep terrain",
-  "Existing built land",
-  "Remaining buildable land",
+const CONSTRAINTS = [
+  {
+    stage: 1,
+
+    label:
+      "Protected land",
+
+    color:
+      BUILDABLE_LAND_COLORS.protected,
+
+    sentence:
+      "removes large areas from future development.",
+  },
+
+  {
+    stage: 2,
+
+    label:
+      "Steep terrain",
+
+    color:
+      BUILDABLE_LAND_COLORS.slope,
+
+    sentence:
+      "further narrows where growth can safely occur.",
+  },
+
+  {
+    stage: 3,
+
+    label:
+      "Existing built land",
+
+    color:
+      BUILDABLE_LAND_COLORS.built,
+
+    sentence:
+      "has already consumed part of the country’s limited developable footprint.",
+  },
+
+  {
+    stage: 4,
+
+    label:
+      "Remaining buildable land",
+
+    color:
+      BUILDABLE_LAND_COLORS.remaining,
+
+    sentence:
+      "shows what is realistically left for future growth.",
+  },
+];
+
+
+const LAND_METRICS = [
+  "468 km² total",
+  "~30 km² built",
+  "~40 km² remaining",
 ];
 
 
 export default function BuildableLandSection({
   step,
 }) {
-  const [stage, setStage] = useState(0);
+  const [
+    stage,
+    setStage,
+  ] = useState(
+    0
+  );
 
-  // The map has 5 explanatory stages,
-  // but the story has 3 headline area numbers.
+
+  /*
+    Stages 0–2:
+    keep TOTAL LAND as the highlighted context.
+
+    Stage 3:
+    highlight EXISTING BUILT LAND.
+
+    Stage 4:
+    highlight REMAINING BUILDABLE LAND.
+  */
   const activeMetricIndex =
-    stage === 0
-      ? 0
+    stage === 3
+      ? 1
       : stage === 4
         ? 2
-        : 1;
- 
+        : 0;
+
+
   return (
-    <div className="story-split-grid">
+    <div className="story-buildable-layout">
+
+      {/* LEFT — MAP */}
 
       <div className="story-buildable-map-column">
 
-        <div className="story-map-card story-buildable-map-card">
-          <BuildableLandMap stage={stage} />
-        </div>
-
-
-        <div className="story-buildable-stage-controls">
-
-          {MAP_STAGES.map((label, index) => (
-            <button
-              key={label}
-              type="button"
-              className={
-                `story-buildable-stage-button` +
-                (stage === index
-                  ? " is-active"
-                  : "")
-              }
-              onClick={() => setStage(index)}
-            >
-              {label}
-            </button>
-          ))}
-
+        <div
+          id="story-buildable-map"
+          className="story-map-card story-buildable-map-card"
+        >
+          <BuildableLandMap
+            stage={
+              stage
+            }
+          />
         </div>
 
       </div>
 
 
-      <div className="story-narrative-column">
+      {/* RIGHT — CLICKABLE NARRATIVE */}
 
-        <NarrativeCard>
-          <p>{step.annotation}</p>
-        </NarrativeCard>
+      <div className="story-buildable-panel">
 
+        <div className="story-buildable-inline-copy">
 
-        <div className="story-metric-sequence">
+          <p className="story-buildable-inline-instruction">
 
-          {(step.visualSequence ?? []).map(
-            (item, index) => (
+            <strong>
+              Click
+            </strong>{" "}
 
-              <Fragment key={item}>
+            the highlighted terms below to see how each constraint reshapes the map.
 
-                <div
-                  className={
-                    `story-metric-step` +
-                    (
-                      activeMetricIndex === index
-                        ? " is-active"
-                        : ""
-                    )
-                  }
-                >
-                  {item}
-                </div>
+          </p>
 
 
-                {index <
-                  step.visualSequence.length - 1 && (
+          <p className="story-buildable-inline-paragraph">
 
-                  <span className="story-metric-arrow">
-                    →
+            {CONSTRAINTS.map(
+              (
+                constraint,
+                index
+              ) => {
+                const isActive =
+                  stage ===
+                  constraint.stage;
+
+
+                return (
+                  <span
+                    key={
+                      constraint.label
+                    }
+                    className="story-buildable-inline-clause"
+                  >
+
+                    <button
+                      type="button"
+                      className={
+                        `story-buildable-inline-control${
+                          isActive
+                            ? " is-active"
+                            : ""
+                        }`
+                      }
+                      style={{
+                        "--constraint-color":
+                          constraint.color,
+                      }}
+                      aria-pressed={
+                        isActive
+                      }
+                      aria-controls="story-buildable-map"
+                      onClick={() =>
+                        setStage(
+                          constraint.stage
+                        )
+                      }
+                    >
+                      {
+                        constraint.label
+                      }
+                    </button>
+
+
+                    {" "}
+
+
+                    <span className="story-buildable-inline-description">
+                      {
+                        constraint.sentence
+                      }
+                    </span>
+
+
+                    {index <
+                      CONSTRAINTS.length -
+                        1 && " "}
+
                   </span>
+                );
+              }
+            )}
 
-                )}
+          </p>
 
-              </Fragment>
+        </div>
 
+
+        {/* LAND-AREA STATS */}
+
+        <div className="story-buildable-metrics">
+
+          {LAND_METRICS.map(
+            (
+              item,
+              index
+            ) => (
+              <div
+                key={
+                  item
+                }
+                className={
+                  `story-buildable-metric${
+                    activeMetricIndex ===
+                    index
+                      ? " is-active"
+                      : ""
+                  }`
+                }
+              >
+
+                <strong>
+                  {
+                    item
+                  }
+                </strong>
+
+              </div>
             )
           )}
 

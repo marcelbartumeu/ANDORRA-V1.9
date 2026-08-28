@@ -6339,3 +6339,833 @@ body {
     margin: 0;
     max-width: 850px;
   }
+
+/* ============================================================
+   BUILDABLE LAND — INLINE NARRATIVE CONTROLS
+   ============================================================ */
+
+
+/* Right-side text area */
+
+.story-buildable-inline-copy {
+  width: 100%;
+}
+
+
+/* Instruction */
+
+.story-buildable-inline-instruction {
+  max-width: 560px;
+
+  margin:
+    0
+    0
+    2rem;
+
+  padding-left:
+    1rem;
+
+  border-left:
+    3px solid
+    var(--story-red);
+
+  font-size:
+    0.78rem;
+
+  font-weight:
+    500;
+
+  line-height:
+    1.6;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.48
+    );
+}
+
+
+/* Four sentences */
+
+.story-buildable-inline-sentences {
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  border-top:
+    1px solid
+    var(--story-line-dark);
+}
+
+
+.story-buildable-inline-sentence {
+  position:
+    relative;
+
+  margin:
+    0;
+
+  padding:
+    1.45rem
+    0;
+
+  border-bottom:
+    1px solid
+    var(--story-line-dark);
+
+  font-family:
+    var(--story-body);
+
+  font-size:
+    clamp(
+      1.05rem,
+      1.35vw,
+      1.35rem
+    );
+
+  font-weight:
+    400;
+
+  line-height:
+    1.55;
+
+  letter-spacing:
+    -0.015em;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.62
+    );
+
+  transition:
+    color 180ms ease,
+    padding-left 180ms ease,
+    background 180ms ease;
+}
+
+
+/* Active sentence gets subtle emphasis */
+
+.story-buildable-inline-sentence.is-active {
+  padding-left:
+    1rem;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.9
+    );
+
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(
+        in srgb,
+        var(--constraint-color) 12%,
+        transparent
+      ),
+      transparent 72%
+    );
+}
+
+
+/* Small colored marker on active sentence */
+
+.story-buildable-inline-sentence.is-active::before {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  left:
+    0;
+
+  top:
+    1.25rem;
+
+  bottom:
+    1.25rem;
+
+  width:
+    3px;
+
+  background:
+    var(--constraint-color);
+}
+
+
+/* ============================================================
+   THE CLICKABLE WORDS
+   ============================================================ */
+
+.story-buildable-inline-control {
+  appearance:
+    none;
+
+  display:
+    inline;
+
+  margin:
+    0;
+
+  padding:
+    0;
+
+  border:
+    0;
+
+  background:
+    transparent;
+
+  font:
+    inherit;
+
+  font-weight:
+    750;
+
+  color:
+    var(--constraint-color);
+
+  cursor:
+    pointer;
+
+  text-align:
+    left;
+
+  text-decoration-line:
+    underline;
+
+  text-decoration-color:
+    var(--constraint-color);
+
+  text-decoration-thickness:
+    1.5px;
+
+  text-underline-offset:
+    0.18em;
+
+  transition:
+    filter 160ms ease,
+    text-decoration-thickness 160ms ease,
+    text-underline-offset 160ms ease,
+    text-shadow 160ms ease;
+}
+
+
+/* Make it very obvious that the words are clickable */
+
+.story-buildable-inline-control:hover {
+  filter:
+    brightness(1.25);
+
+  text-decoration-thickness:
+    3px;
+
+  text-underline-offset:
+    0.22em;
+}
+
+
+/* Selected map layer */
+
+.story-buildable-inline-control.is-active {
+  text-decoration-thickness: 2px;
+
+  text-shadow: none;
+
+  box-shadow:
+    inset 0 -0.45em 0
+    color-mix(
+      in srgb,
+      var(--constraint-color) 32%,
+      transparent
+    );
+}
+
+
+/* Keyboard accessibility */
+
+.story-buildable-inline-control:focus-visible {
+  outline:
+    2px solid
+    var(--constraint-color);
+
+  outline-offset:
+    4px;
+
+  border-radius:
+    2px;
+}
+
+
+/* ============================================================
+   LAND-AREA STATS
+   ============================================================ */
+
+.story-buildable-metrics {
+  margin-top:
+    3rem;
+}
+
+
+.story-buildable-metric {
+  opacity:
+    0.42;
+
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease;
+}
+
+
+.story-buildable-metric.is-active {
+  opacity:
+    1;
+
+  transform:
+    translateY(-2px);
+}
+
+
+/* ============================================================
+   MAKE TERRAIN BLUE EVERYWHERE THIS OLD LEGEND CLASS IS USED
+   ============================================================ */
+
+.legend-swatch--terrain {
+  background:
+    #2563eb;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (
+  max-width: 980px
+) {
+
+  .story-buildable-inline-copy {
+    max-width:
+      680px;
+  }
+
+
+  .story-buildable-inline-sentence {
+    font-size:
+      1.1rem;
+  }
+
+}
+
+
+@media (
+  max-width: 720px
+) {
+
+  .story-buildable-inline-instruction {
+    margin-bottom:
+      1.25rem;
+  }
+
+
+  .story-buildable-inline-sentence {
+    padding:
+      1.15rem
+      0;
+  }
+
+
+  .story-buildable-inline-sentence.is-active {
+    padding-left:
+      0.8rem;
+  }
+
+}
+/* ============================================================
+   BUILDABLE LAND — FINAL POLISH
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   1. KEEP "BUILDABLE LAND CONSTRAINT" ON ONE LINE
+   ------------------------------------------------------------ */
+
+/*
+  Only targets the section containing the Buildable Land layout,
+  so the other chapter titles keep their current sizing.
+*/
+
+@media (min-width: 721px) {
+
+  .story-section:has(.story-buildable-layout)
+  .story-section-header h2 {
+    white-space: nowrap;
+
+    font-size:
+      clamp(
+        52px,
+        5.5vw,
+        88px
+      );
+  }
+
+}
+
+
+/* ------------------------------------------------------------
+   2. MAKE THE CLICK INSTRUCTION MUCH MORE NOTICEABLE
+   ------------------------------------------------------------ */
+
+.story-buildable-inline-instruction {
+  max-width:
+    620px;
+
+  margin:
+    0
+    0
+    2.25rem;
+
+  padding:
+    0
+    0
+    0
+    1.15rem;
+
+  border-left:
+    3px solid
+    var(--story-red);
+
+  font-size:
+    clamp(
+      1rem,
+      1.3vw,
+      1.25rem
+    );
+
+  font-weight:
+    600;
+
+  line-height:
+    1.45;
+
+  letter-spacing:
+    -0.015em;
+
+  color:
+    #ffffff;
+}
+
+
+.story-buildable-inline-instruction strong {
+  margin-right:
+    0.15em;
+
+  font-family:
+    var(--story-display) !important;
+
+  font-size:
+    1.45em;
+
+  font-weight:
+    800;
+
+  line-height:
+    0;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.025em;
+
+  color:
+    var(--story-red-pale);
+}
+
+
+/* ------------------------------------------------------------
+   3. MAKE 468 / ~70 / ~40 METRICS WHITE
+   ------------------------------------------------------------ */
+
+.story-buildable-metric strong {
+  color:
+    #ffffff;
+}
+
+
+.story-buildable-metric.is-active strong {
+  color:
+    #ffffff;
+}
+
+
+/* Make inactive numbers slightly quieter,
+   while still keeping them white */
+
+.story-buildable-metric:not(.is-active) strong {
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.62
+    );
+}
+
+
+/* ------------------------------------------------------------
+   4. MAKE THE MAP ~20% LARGER
+   ------------------------------------------------------------ */
+
+.story-buildable-layout {
+  grid-template-columns:
+    minmax(
+      560px,
+      1.2fr
+    )
+    minmax(
+      360px,
+      0.8fr
+    );
+
+  gap:
+    clamp(
+      38px,
+      4.5vw,
+      72px
+    );
+}
+
+
+.story-buildable-map-card {
+  width:
+    100%;
+
+  max-width:
+    805px;
+}
+
+
+/* Let the map column actually use the extra room */
+
+.story-buildable-map-column {
+  width:
+    100%;
+
+  min-width:
+    0;
+}
+
+
+/* ------------------------------------------------------------
+   RESPONSIVE
+   ------------------------------------------------------------ */
+
+@media (max-width: 980px) {
+
+  .story-buildable-layout {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .story-buildable-map-card {
+    max-width:
+      680px;
+  }
+
+}
+
+
+@media (max-width: 720px) {
+
+  .story-buildable-inline-instruction {
+    font-size:
+      1rem;
+  }
+
+
+  .story-buildable-inline-instruction strong {
+    font-size:
+      1.25em;
+  }
+
+}
+
+/* ============================================================
+   BUILDABLE LAND — COMPACT INLINE PARAGRAPH
+   ============================================================ */
+
+
+/* Tighten the instruction so the content below moves upward */
+
+.story-buildable-inline-instruction {
+  margin-bottom: 1.35rem;
+}
+
+
+/* One unified paragraph instead of four separate rows */
+
+.story-buildable-inline-paragraph {
+  max-width: 680px;
+
+  margin: 0;
+
+  padding: 0;
+
+  border: 0;
+
+  font-size:
+    clamp(
+      1.08rem,
+      1.4vw,
+      1.4rem
+    );
+
+  font-weight: 450;
+
+  line-height: 1.75;
+
+  letter-spacing: -0.015em;
+
+  color: #ffffff;
+}
+
+
+/* Each sentence stays semantically separate,
+   but visually flows as one paragraph */
+
+.story-buildable-inline-clause {
+  display: inline;
+
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+}
+
+
+/* White explanatory text after each clickable phrase */
+
+.story-buildable-inline-description {
+  color: rgba(
+    255,
+    255,
+    255,
+    0.92
+  );
+}
+
+
+/* Keep clickable words colored */
+
+.story-buildable-inline-control {
+  display: inline;
+
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  font: inherit;
+
+  font-weight: 750;
+
+  color:
+    var(--constraint-color);
+
+  cursor: pointer;
+
+  text-decoration-line:
+    underline;
+
+  text-decoration-color:
+    var(--constraint-color);
+
+  text-decoration-thickness:
+    1.5px;
+
+  text-underline-offset:
+    0.18em;
+}
+
+
+.story-buildable-inline-control:hover {
+  filter: brightness(1.15);
+
+  text-decoration-thickness: 2.5px;
+
+  text-underline-offset: 0.24em;
+}
+
+
+.story-buildable-inline-control.is-active {
+  text-decoration-thickness:
+    3px;
+
+  text-shadow:
+    0
+    0
+    16px
+    var(--constraint-color);
+}
+
+
+.story-buildable-inline-control:focus-visible {
+  outline:
+    2px solid
+    var(--constraint-color);
+
+  outline-offset:
+    3px;
+}
+
+
+/* Kill the old four-row visual treatment */
+
+.story-buildable-inline-sentences,
+.story-buildable-inline-sentence,
+.story-buildable-inline-sentence.is-active {
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+
+/* Pull the 468 / ~70 / ~40 figures higher */
+
+.story-buildable-metrics {
+  margin-top: 1.8rem;
+  margin-bottom: 0;
+}
+
+
+/* Keep all three values white */
+
+.story-buildable-metric strong,
+.story-buildable-metric.is-active strong,
+.story-buildable-metric:not(.is-active) strong {
+  color: #ffffff;
+}
+
+
+/* Preserve hierarchy without turning inactive values gray */
+
+.story-buildable-metric:not(.is-active) {
+  opacity: 0.58;
+}
+
+
+.story-buildable-metric.is-active {
+  opacity: 1;
+}
+
+
+/* Mobile */
+
+@media (max-width: 720px) {
+
+  .story-buildable-inline-paragraph {
+    font-size: 1.08rem;
+    line-height: 1.7;
+  }
+
+
+  .story-buildable-metrics {
+    margin-top: 1.5rem;
+  }
+
+}
+/* ============================================================
+   BUILDABLE LAND — ACTIVE TEXT HIGHLIGHTER
+   ============================================================ */
+
+.story-buildable-inline-control {
+  text-shadow: none !important;
+  box-shadow: none !important;
+  filter: none;
+}
+
+
+.story-buildable-inline-control:hover {
+  text-shadow: none !important;
+  box-shadow: none !important;
+  filter: none;
+
+  text-decoration-thickness: 2.5px;
+  text-underline-offset: 0.24em;
+}
+
+
+.story-buildable-inline-control.is-active {
+  text-shadow: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+
+  /*
+    Editorial marker/highlighter effect:
+    color only sits behind the lower part of the words.
+  */
+  background-image:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 56%,
+      color-mix(
+        in srgb,
+        var(--constraint-color) 38%,
+        transparent
+      ) 56%,
+      color-mix(
+        in srgb,
+        var(--constraint-color) 38%,
+        transparent
+      ) 91%,
+      transparent 91%
+    );
+
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+
+  text-decoration-thickness: 2px;
+}
+
+.story-buildable-metric-value {
+  font: inherit;
+}
+
+.story-buildable-metric-label {
+  display: block;
+
+  margin-top: 0.3rem;
+
+  font-family: var(--story-body) !important;
+
+  font-size: 0.72rem;
+
+  font-weight: 600;
+
+  line-height: 1;
+
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
+
+  color: #ffffff;
+}
