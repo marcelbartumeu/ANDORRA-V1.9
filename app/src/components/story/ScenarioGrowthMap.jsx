@@ -14,6 +14,7 @@ import {
 } from "../../utils/mapboxBase";
 
 import "mapbox-gl/dist/mapbox-gl.css";
+import { hideStoryFrameCorners } from "./StoryMapUtils";
 
 
 const SCENARIOS = {
@@ -51,28 +52,28 @@ const GROWTH_COLOR_EXPRESSION = [
   ["get", "_visualGrowth"],
 
   0,
-  "#2447ff",
+  "#2b171a",
 
   1,
-  "#4161ff",
+  "#4d1c24",
 
   2,
-  "#6965ff",
+  "#6f202c",
 
   4,
-  "#9b6dff",
+  "#8f2634",
 
   7,
-  "#f07cc3",
+  "#ad4351",
 
   12,
-  "#ff9fb0",
+  "#cc6f79",
 
   20,
-  "#ffd878",
+  "#e3a2a8",
 
   30,
-  "#fff0ad",
+  "#f3d4d6",
 ];
 
 
@@ -250,6 +251,8 @@ export default function ScenarioGrowthMap({
           },
         });
       }
+
+      hideStoryFrameCorners(map);
     },
 
     [

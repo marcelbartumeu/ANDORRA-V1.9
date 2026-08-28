@@ -8,6 +8,7 @@ import {
 } from "../../utils/mapboxBase";
 
 import "mapbox-gl/dist/mapbox-gl.css";
+import { hideStoryFrameCorners } from "./StoryMapUtils";
 
 const LAYERS = {
   buildable: "story-buildable-land",
@@ -186,7 +187,7 @@ export default function BuildableLandMap({
       map,
       LAYERS.built,
       data.built,
-      "#9333ea"
+      "#8f2634"
     );
 
     // Remaining land sits on top so it becomes the final focus.
@@ -198,6 +199,7 @@ export default function BuildableLandMap({
     );
 
     applyStage(map, stageRef.current);
+    hideStoryFrameCorners(map);
   }, []);
 
 

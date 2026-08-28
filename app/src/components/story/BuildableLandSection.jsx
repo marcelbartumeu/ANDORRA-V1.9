@@ -29,7 +29,6 @@ export default function BuildableLandSection({
       : stage === 4
         ? 2
         : 1;
-
  
   return (
     <div className="story-split-grid">

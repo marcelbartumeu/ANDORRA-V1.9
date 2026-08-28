@@ -1,156 +1,246 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 
-import BaseMapView from "../BaseMapView";
 
-import {
-  NarrativeCard,
-  PhotoPanel,
-} from "./StoryShared";
+const BOSTON_COMPARISON_IMAGE =
+  "/story/andorra-boston-comparison.png";
 
-function normalizeMetricName(value = "") {
-  return value
-    .normalize("NFKC")
-    .replace(/[\u2010-\u2015\u2212]/g, "-")
-    .replace(/\s+/g, " ")
-    .trim()
-    .toLowerCase();
-}
 
-function findMetric(data, label) {
-  const normalizedLabel = normalizeMetricName(label);
+/*
+  Simple one-time scroll reveal.
 
-  return data.find((item) => {
-    const metricName = normalizeMetricName(
-      item["Unnamed: 0"]
+  Each fact waits until it is more clearly
+  inside the viewport, then fades/slides in
+  more slowly.
+*/
+function Reveal({
+  children,
+  className = "",
+}) {
+  const elementRef = useRef(null);
+
+  useEffect(() => {
+    const element =
+      elementRef.current;
+
+    if (!element) return;
+
+    const observer =
+      new IntersectionObserver(
+        ([entry]) => {
+          if (
+            entry.isIntersecting
+          ) {
+            element.classList.add(
+              "is-visible"
+            );
+
+            observer.unobserve(
+              element
+            );
+          }
+        },
+        {
+          threshold: 0.28,
+          rootMargin:
+            "0px 0px -10% 0px",
+        }
+      );
+
+    observer.observe(
+      element
     );
 
-    return metricName === normalizedLabel;
-  });
-}
+    return () =>
+      observer.disconnect();
+  }, []);
 
-function CurrentStat({ label, value, unit = "" }) {
   return (
-    <div className="story-current-stat">
-      <span className="story-current-stat-label">
-        {label}
-      </span>
-
-      <strong className="story-current-stat-value">
-        {value}
-        {unit}
-      </strong>
-
-      <span className="story-current-stat-year">
-        2024 actual
-      </span>
+    <div
+      ref={elementRef}
+      className={`story-today-reveal ${className}`}
+    >
+      {children}
     </div>
   );
 }
 
-export default function AndorraTodaySection({
-  step,
-  photoPaths,
-}) {
-  const [currentData, setCurrentData] = useState([]);
-  const [dataError, setDataError] = useState(false);
 
-  useEffect(() => {
-    async function loadCurrentData() {
-      try {
-        const response = await fetch("/model/Current.json");
-
-        if (!response.ok) {
-          throw new Error(
-            `Could not load Current.json: ${response.status}`
-          );
-        }
-
-        const data = await response.json();
-        setCurrentData(data);
-      } catch (error) {
-        console.error(
-          "Failed to load current Andorra data:",
-          error
-        );
-
-        setDataError(true);
-      }
-    }
-
-    loadCurrentData();
-  }, []);
-
-  const population =
-    findMetric(currentData, "Population Growth")?.["2024"];
-
-  const lifeExpectancy =
-    findMetric(currentData, "Life expectency")?.["2024"] ??
-    findMetric(currentData, "Life expectency ")?.["2024"];
-
-  const foreignBornPercent =
-    findMetric(currentData, "% Foreign-born")?.["2024"];
-
+export default function AndorraTodaySection() {
   return (
-    <>
-      <div className="story-split-grid">
-        <div className="story-map-column">
+    <div className="story-today-editorial">
 
-          <div className="story-map-card">
-            <BaseMapView mapStyle="satellite" />
-          </div>
+      {/* ======================================================
+          AREA + DENSITY
+          ====================================================== */}
 
-          {!dataError && (
-            <div className="story-current-stats">
+      <Reveal className="story-today-area-beat">
 
-              <CurrentStat
-                label="Population"
-                value={
-                  population
-                    ? population.toLocaleString()
-                    : "—"
-                }
-              />
-
-              <CurrentStat
-                label="Life expectancy"
-                value={
-                  lifeExpectancy
-                    ? lifeExpectancy.toFixed(1)
-                    : "—"
-                }
-                unit=" years"
-              />
-
-              <CurrentStat
-                label="Foreign-born population"
-                value={
-                  foreignBornPercent
-                    ? foreignBornPercent.toFixed(1)
-                    : "—"
-                }
-                unit="%"
-              />
-
-            </div>
-          )}
-
+        <div className="story-today-area-intro">
+          <p>
+            Andorra is about{" "}
+            <strong>
+              3.7× the land area of
+              Boston proper.
+            </strong>
+          </p>
         </div>
 
-        <NarrativeCard>
-          <p>{step.annotation}</p>
-        </NarrativeCard>
-      </div>
 
-      <div className="story-split-grid story-section-secondary-row">
-        <NarrativeCard>
-          <p>{step.secondaryAnnotation}</p>
-        </NarrativeCard>
+        <div className="story-today-area-layout">
 
-        <PhotoPanel
-          src={photoPaths.town}
-          label="Andorra town and built environment"
-        />
-      </div>
-    </>
+          <figure className="story-today-comparison-figure">
+            <img
+              src={
+                BOSTON_COMPARISON_IMAGE
+              }
+              alt="Map comparison showing the relative land area of Andorra and Boston proper"
+            />
+          </figure>
+
+
+          <div className="story-today-density-copy">
+
+            <span className="story-today-density-intro">
+              Andorra has
+            </span>
+
+
+            <div className="story-today-density-number">
+              <span className="story-today-big-stat">
+                482
+              </span>
+
+              <span className="story-today-big-stat-unit">
+                people/mi²
+              </span>
+            </div>
+
+
+            <p className="story-today-density-comparison">
+              but is{" "}
+              <strong>
+                about 30× less dense than
+                Boston proper.
+              </strong>
+            </p>
+
+          </div>
+
+        </div>
+      </Reveal>
+
+
+      {/* ======================================================
+          MOUNTAINS
+          ====================================================== */}
+
+      <Reveal className="story-today-beat story-today-beat--left">
+
+        <div className="story-today-beat-stat">
+          <span className="story-today-big-stat">
+            65+
+          </span>
+
+          <span className="story-today-stat-caption">
+            PEAKS
+          </span>
+        </div>
+
+
+        <p className="story-today-beat-copy">
+          Andorra is extremely
+          mountainous, with over 65
+          peaks rise above 6,000 feet,
+          concentrating most settlement
+          and infrastructure in Andorra’s
+          narrow valleys.
+        </p>
+
+      </Reveal>
+
+
+      {/* ======================================================
+          URBANIZED LAND
+          ====================================================== */}
+
+      <Reveal className="story-today-beat story-today-beat--right">
+
+        <div className="story-today-beat-stat">
+          <span className="story-today-big-stat">
+            ~8%
+          </span>
+
+          <span className="story-today-stat-caption">
+            OF LAND URBANIZED
+          </span>
+        </div>
+
+
+        <p className="story-today-beat-copy">
+          That helps explain why,
+          despite a population of just
+          89,000, only ~8% of Andorra’s
+          land is urbanized.
+        </p>
+
+      </Reveal>
+
+
+      {/* ======================================================
+          ROAD ACCESS
+          ====================================================== */}
+
+      <Reveal className="story-today-beat story-today-beat--left story-today-road-beat">
+
+        <div className="story-today-road-word">
+          BY ROAD
+        </div>
+
+
+        <p className="story-today-beat-copy story-today-road-copy">
+          It’s also the reason why
+          Andorra has no airport or rail
+          stations; all entry and exit is
+          by road.
+        </p>
+
+      </Reveal>
+
+
+      {/* ======================================================
+          TRANSITION INTO BUILDABLE LAND
+          ====================================================== */}
+
+      <Reveal className="story-today-question-beat">
+
+        <p className="story-today-question-setup">
+          <strong>
+            Steep terrain and debris-flow
+            risk further limit where
+            development can safely expand,
+          </strong>
+
+          <span>
+            which begs the question:
+          </span>
+        </p>
+
+
+        <p className="story-today-question">
+          how much land is actually
+          left to build on?
+        </p>
+
+
+        <span
+          className="story-today-question-arrow"
+          aria-hidden="true"
+        >
+          ↓
+        </span>
+
+      </Reveal>
+
+    </div>
   );
 }
