@@ -1,215 +1,716 @@
-import { useEffect, useMemo, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+
 import ScenarioGrowthMap from "./ScenarioGrowthMap";
+
 
 const START_YEAR = 2026;
 const END_YEAR = 2049;
+
 
 const SCENARIOS = [
   {
     id: "degrowth",
     label: "Degrowth",
     subtitle: "Population contraction",
-    timeseries: "/model/Degrowth_timeseries.json",
-    narrativeTitle: "A smaller Andorra",
+    timeseries:
+      "/model/Degrowth_timeseries.json",
+    narrativeTitle:
+      "A smaller Andorra",
     narrative:
       "Population and economic activity contract over time, reducing pressure on land and public systems while also shrinking the country's economic base.",
   },
+
   {
     id: "continuity",
     label: "Continuity",
     subtitle: "Baseline trajectory",
-    timeseries: "/model/Continuity_timeseries.json",
-    narrativeTitle: "More of today's trajectory",
+    timeseries:
+      "/model/Continuity_timeseries.json",
+    narrativeTitle:
+      "More of today's trajectory",
     narrative:
       "Population, economic activity, and development pressure continue to grow without the acceleration of Overgrowth or the tighter pattern represented by Density.",
   },
+
   {
     id: "density",
     label: "Density",
     subtitle: "More compact growth",
-    timeseries: "/model/Density_timeseries.json",
-    narrativeTitle: "Growth in a tighter footprint",
+    timeseries:
+      "/model/Density_timeseries.json",
+    narrativeTitle:
+      "Growth in a tighter footprint",
     narrative:
       "Population grows more slowly and future development remains more concentrated, changing how physical and infrastructure pressure is distributed.",
   },
+
   {
     id: "overgrowth",
     label: "Overgrowth",
     subtitle: "Rapid growth",
-    timeseries: "/model/Overgrowth_timeseries.json",
-    narrativeTitle: "The highest-growth future",
+    timeseries:
+      "/model/Overgrowth_timeseries.json",
+    narrativeTitle:
+      "The highest-growth future",
     narrative:
       "Population and economic activity expand much faster, producing substantially greater development and infrastructure pressure by the end of the model period.",
   },
 ];
 
-function findYear(rows, year) {
-  return rows?.find((row) => Number(row.Year) === year) ?? null;
+
+function findYear(
+  rows,
+  year
+) {
+  return (
+    rows?.find(
+      (row) =>
+        Number(
+          row.Year
+        ) === year
+    ) ?? null
+  );
 }
 
-function formatPopulation(value) {
-  if (value == null) return "—";
-  return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
+
+function formatPopulation(
+  value
+) {
+  if (
+    value == null
+  ) {
+    return "—";
+  }
+
+  return new Intl.NumberFormat(
+    "en-US",
+    {
+      maximumFractionDigits: 0,
+    }
+  ).format(
+    value
+  );
 }
 
-function formatGDP(value) {
-  if (value == null) return "—";
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "EUR",
-    maximumFractionDigits: 0,
-  }).format(value);
+
+function formatGDP(
+  value
+) {
+  if (
+    value == null
+  ) {
+    return "—";
+  }
+
+  return new Intl.NumberFormat(
+    "en-US",
+    {
+      style: "currency",
+      currency: "EUR",
+      maximumFractionDigits: 0,
+    }
+  ).format(
+    value
+  );
 }
 
-function formatCO2(value) {
-  if (value == null) return "—";
-  return new Intl.NumberFormat("en-US", {
-    notation: "compact",
-    maximumFractionDigits: 2,
-  }).format(value);
+
+function formatCO2(
+  value
+) {
+  if (
+    value == null
+  ) {
+    return "—";
+  }
+
+  return new Intl.NumberFormat(
+    "en-US",
+    {
+      notation: "compact",
+      maximumFractionDigits: 2,
+    }
+  ).format(
+    value
+  );
 }
 
-function ScenarioKpis({ row }) {
+
+function ScenarioKpis({
+  row,
+}) {
   return (
     <dl className="story-scenario-kpis">
-      <div className="story-scenario-kpi">
-        <dt>Population</dt>
-        <dd>{formatPopulation(row?.Pop)}</dd>
-      </div>
 
       <div className="story-scenario-kpi">
-        <dt>GDP / capita</dt>
-        <dd>{formatGDP(row?.GDPpc)}</dd>
+        <dt>
+          Population
+        </dt>
+
+        <dd>
+          {formatPopulation(
+            row?.Pop
+          )}
+        </dd>
       </div>
 
+
       <div className="story-scenario-kpi">
-        <dt>Total CO₂</dt>
-        <dd>{formatCO2(row?.CO2_total)}</dd>
+        <dt>
+          GDP / capita
+        </dt>
+
+        <dd>
+          {formatGDP(
+            row?.GDPpc
+          )}
+        </dd>
       </div>
+
+
+      <div className="story-scenario-kpi">
+        <dt>
+          Total CO₂
+        </dt>
+
+        <dd>
+          {formatCO2(
+            row?.CO2_total
+          )}
+        </dd>
+      </div>
+
     </dl>
   );
 }
 
-export default function ScenariosSection({ step }) {
-  const [selectedYear, setSelectedYear] = useState(START_YEAR);
-  const [scenarioData, setScenarioData] = useState({});
-  const [error, setError] = useState(false);
 
-  useEffect(() => {
-    const controller = new AbortController();
+export default function ScenariosSection({
+  step,
+}) {
+  const [
+    selectedYear,
+    setSelectedYear,
+  ] = useState(
+    START_YEAR
+  );
 
-    Promise.all(
-      SCENARIOS.map(async (scenario) => {
-        const response = await fetch(scenario.timeseries, {
-          signal: controller.signal,
-        });
 
-        if (!response.ok) {
-          throw new Error(`Could not load ${scenario.timeseries}`);
-        }
+  const [
+    scenarioData,
+    setScenarioData,
+  ] = useState(
+    {}
+  );
 
-        return [scenario.id, await response.json()];
-      })
-    )
-      .then((entries) => setScenarioData(Object.fromEntries(entries)))
-      .catch((err) => {
-        if (err.name !== "AbortError") {
-          console.error("Failed to load scenario timeseries:", err);
-          setError(true);
-        }
-      });
 
-    return () => controller.abort();
-  }, []);
+  const [
+    error,
+    setError,
+  ] = useState(
+    false
+  );
 
-  const selectedRows = useMemo(() => {
-    return Object.fromEntries(
-      SCENARIOS.map((scenario) => [
-        scenario.id,
-        findYear(scenarioData[scenario.id], selectedYear),
-      ])
+
+  /*
+    Load the same four existing
+    scenario timeseries files.
+  */
+  useEffect(
+    () => {
+      const controller =
+        new AbortController();
+
+
+      Promise.all(
+        SCENARIOS.map(
+          async (
+            scenario
+          ) => {
+            const response =
+              await fetch(
+                scenario.timeseries,
+                {
+                  signal:
+                    controller.signal,
+                }
+              );
+
+
+            if (
+              !response.ok
+            ) {
+              throw new Error(
+                `Could not load ${scenario.timeseries}`
+              );
+            }
+
+
+            return [
+              scenario.id,
+              await response.json(),
+            ];
+          }
+        )
+      )
+
+        .then(
+          (
+            entries
+          ) => {
+            setScenarioData(
+              Object.fromEntries(
+                entries
+              )
+            );
+          }
+        )
+
+        .catch(
+          (
+            err
+          ) => {
+            if (
+              err.name !==
+              "AbortError"
+            ) {
+              console.error(
+                "Failed to load scenario timeseries:",
+                err
+              );
+
+              setError(
+                true
+              );
+            }
+          }
+        );
+
+
+      return () => {
+        controller.abort();
+      };
+    },
+    []
+  );
+
+
+  /*
+    ACTUAL model rows.
+
+    These are still used for:
+    - 2027–2049 displayed values
+    - driving map progression
+  */
+  const actualSelectedRows =
+    useMemo(
+      () => {
+        return Object.fromEntries(
+          SCENARIOS.map(
+            (
+              scenario
+            ) => [
+              scenario.id,
+
+              findYear(
+                scenarioData[
+                  scenario.id
+                ],
+                selectedYear
+              ),
+            ]
+          )
+        );
+      },
+      [
+        scenarioData,
+        selectedYear,
+      ]
     );
-  }, [scenarioData, selectedYear]);
+
+
+  /*
+    Shared 2026 comparison baseline.
+
+    Continuity acts as the common
+    baseline for the displayed stats.
+  */
+  const shared2026Row =
+    useMemo(
+      () => {
+        const continuityRow =
+          findYear(
+            scenarioData.continuity,
+            START_YEAR
+          );
+
+
+        if (
+          continuityRow
+        ) {
+          return continuityRow;
+        }
+
+
+        /*
+          Fallback only if Continuity
+          has not loaded for some reason.
+        */
+        for (
+          const scenario
+          of SCENARIOS
+        ) {
+          const row =
+            findYear(
+              scenarioData[
+                scenario.id
+              ],
+              START_YEAR
+            );
+
+
+          if (
+            row
+          ) {
+            return row;
+          }
+        }
+
+
+        return null;
+      },
+      [
+        scenarioData,
+      ]
+    );
+
+
+  /*
+    DISPLAY rows.
+
+    At 2026 every scenario visibly
+    begins from the exact same baseline.
+
+    From 2027 onward, use the actual
+    scenario model output.
+  */
+  const displayRows =
+    useMemo(
+      () => {
+        if (
+          selectedYear ===
+            START_YEAR &&
+          shared2026Row
+        ) {
+          return Object.fromEntries(
+            SCENARIOS.map(
+              (
+                scenario
+              ) => [
+                scenario.id,
+                shared2026Row,
+              ]
+            )
+          );
+        }
+
+
+        return actualSelectedRows;
+      },
+      [
+        actualSelectedRows,
+        selectedYear,
+        shared2026Row,
+      ]
+    );
+
+
+  /*
+    Values used by the spatial map
+    interpolation.
+
+    These remain scenario-specific.
+  */
+  const mapPopulationValues =
+    useMemo(
+      () => {
+        return Object.fromEntries(
+          SCENARIOS.map(
+            (
+              scenario
+            ) => {
+              const rows =
+                scenarioData[
+                  scenario.id
+                ];
+
+
+              return [
+                scenario.id,
+                {
+                  selected:
+                    findYear(
+                      rows,
+                      selectedYear
+                    )?.Pop ??
+                    null,
+
+                  baseline:
+                    findYear(
+                      rows,
+                      START_YEAR
+                    )?.Pop ??
+                    null,
+
+                  end:
+                    findYear(
+                      rows,
+                      END_YEAR
+                    )?.Pop ??
+                    null,
+                },
+              ];
+            }
+          )
+        );
+      },
+      [
+        scenarioData,
+        selectedYear,
+      ]
+    );
+
 
   return (
     <>
+
       <div className="story-scenarios-intro">
-        <p className="story-editorial-lede">{step.annotation}</p>
+
+        <div>
+
+          <p className="story-editorial-lede">
+            {step.annotation}
+          </p>
+
+
+          <p className="story-scenarios-baseline-note">
+            2026 is shown as a shared comparison baseline.
+            From 2027 onward, the values follow each
+            scenario&apos;s modeled outputs.
+          </p>
+
+        </div>
+
 
         <div className="story-scenarios-year-block">
-          <span>Selected year</span>
-          <strong>{selectedYear}</strong>
+
+          <span>
+            Selected year
+          </span>
+
+          <strong>
+            {selectedYear}
+          </strong>
+
         </div>
+
       </div>
+
 
       <div className="story-scenarios-grid">
-        {SCENARIOS.map((scenario, index) => (
-          <article key={scenario.id} className="story-scenario-column">
-            <header className="story-scenario-heading">
-              <span className="story-scenario-index">
-                {String(index + 1).padStart(2, "0")}
-              </span>
 
-              <div>
-                <strong>{scenario.label}</strong>
-                <p>{scenario.subtitle}</p>
-              </div>
-            </header>
+        {SCENARIOS.map(
+          (
+            scenario,
+            index
+          ) => {
 
-            <div className="story-map-card story-map-card--square story-scenario-map-card">
-              <ScenarioGrowthMap
-                scenario={scenario.id}
-                selectedYear={selectedYear}
-              />
-            </div>
+            const mapValues =
+              mapPopulationValues[
+                scenario.id
+              ] ?? {};
 
-            <ScenarioKpis row={selectedRows[scenario.id]} />
 
-            <div className="story-scenario-narrative">
-              <strong>{scenario.narrativeTitle}</strong>
-              <p>{scenario.narrative}</p>
-            </div>
-          </article>
-        ))}
+            return (
+              <article
+                key={
+                  scenario.id
+                }
+                className="story-scenario-column"
+              >
+
+                <header className="story-scenario-heading">
+
+                  <span className="story-scenario-index">
+                    {String(
+                      index + 1
+                    ).padStart(
+                      2,
+                      "0"
+                    )}
+                  </span>
+
+
+                  <div>
+
+                    <strong>
+                      {
+                        scenario.label
+                      }
+                    </strong>
+
+                    <p>
+                      {
+                        scenario.subtitle
+                      }
+                    </p>
+
+                  </div>
+
+                </header>
+
+
+                <div className="story-map-card story-map-card--square story-scenario-map-card">
+
+                  <ScenarioGrowthMap
+                    scenario={
+                      scenario.id
+                    }
+                    selectedYear={
+                      selectedYear
+                    }
+                    selectedPopulation={
+                      mapValues.selected
+                    }
+                    baselinePopulation={
+                      mapValues.baseline
+                    }
+                    endPopulation={
+                      mapValues.end
+                    }
+                  />
+
+                </div>
+
+
+                <ScenarioKpis
+                  row={
+                    displayRows[
+                      scenario.id
+                    ]
+                  }
+                />
+
+
+                <div className="story-scenario-narrative">
+
+                  <strong>
+                    {
+                      scenario.narrativeTitle
+                    }
+                  </strong>
+
+                  <p>
+                    {
+                      scenario.narrative
+                    }
+                  </p>
+
+                </div>
+
+              </article>
+            );
+          }
+        )}
+
       </div>
 
+
       <div className="story-scenarios-controls">
+
         <div className="story-scenarios-slider">
+
           <div className="story-year-slider-header">
-            <span>{START_YEAR}</span>
-            <strong>{selectedYear}</strong>
-            <span>{END_YEAR}</span>
+
+            <span>
+              {START_YEAR}
+            </span>
+
+            <strong>
+              {selectedYear}
+            </strong>
+
+            <span>
+              {END_YEAR}
+            </span>
+
           </div>
+
 
           <input
             type="range"
-            min={START_YEAR}
-            max={END_YEAR}
+            min={
+              START_YEAR
+            }
+            max={
+              END_YEAR
+            }
             step="1"
-            value={selectedYear}
-            onChange={(event) => setSelectedYear(Number(event.target.value))}
+            value={
+              selectedYear
+            }
+            onChange={
+              (
+                event
+              ) =>
+                setSelectedYear(
+                  Number(
+                    event.target.value
+                  )
+                )
+            }
             aria-label="Scenario year"
           />
+
         </div>
+
 
         <div className="story-growth-legend">
+
           <div className="story-growth-legend-title">
-            Population growth since 2024
+            Population growth since 2026
           </div>
 
+
           <div className="story-growth-legend-row">
-            <span>Lower growth</span>
+
+            <span>
+              Lower growth
+            </span>
+
             <div className="story-growth-gradient" />
-            <span>Higher growth</span>
+
+            <span>
+              Higher growth
+            </span>
+
           </div>
+
         </div>
+
       </div>
+
 
       {error && (
         <p className="story-scenario-data-error">
           Some scenario data could not be loaded.
         </p>
       )}
+
     </>
   );
 }

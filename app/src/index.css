@@ -4818,6 +4818,7 @@ body {
   font-weight: 600;
   letter-spacing: 0.12em;
   color: #fff;
+  display: none;
 }
 
 /* â”€â”€ PROJECT / CREDITS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -7168,4 +7169,238 @@ body {
   text-transform: uppercase;
 
   color: #ffffff;
+}
+
+/* ============================================================
+   SCENARIOS TO 2049 — READABILITY + BASELINE
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   Shared 2026 baseline disclosure
+   ------------------------------------------------------------ */
+
+.story-scenarios-baseline-note {
+  max-width: 720px;
+
+  margin:
+    1rem
+    0
+    0;
+
+  padding-left:
+    1rem;
+
+  border-left:
+    3px solid
+    var(--story-red);
+
+  font-size:
+    0.76rem;
+
+  font-weight:
+    500;
+
+  line-height:
+    1.55;
+
+  color:
+    rgba(
+      17,
+      17,
+      17,
+      0.55
+    );
+}
+
+
+/* ------------------------------------------------------------
+   Scenario subtitle:
+   "Population contraction"
+   "Baseline trajectory"
+   etc.
+   ------------------------------------------------------------ */
+
+.story-scenario-heading p {
+  margin:
+    0.45rem
+    0
+    0;
+
+  font-size:
+    clamp(
+      14px,
+      1.15vw,
+      17px
+    );
+
+  font-weight:
+    600;
+
+  line-height:
+    1.25;
+
+  letter-spacing:
+    -0.015em;
+
+  color:
+    rgba(
+      17,
+      17,
+      17,
+      0.72
+    );
+}
+
+
+/* Give the larger subtitle enough room */
+
+.story-scenario-heading {
+  min-height:
+    78px;
+
+  margin-bottom:
+    14px;
+}
+
+
+/* ------------------------------------------------------------
+   Narrative subheading:
+   "The highest-growth future"
+   etc.
+   ------------------------------------------------------------ */
+
+.story-scenario-narrative > strong {
+  display:
+    block;
+
+  margin-bottom:
+    0.65rem;
+
+  font-family:
+    var(--story-display) !important;
+
+  font-size:
+    clamp(
+      17px,
+      1.4vw,
+      22px
+    );
+
+  font-weight:
+    700;
+
+  line-height:
+    1.05;
+
+  letter-spacing:
+    -0.015em;
+
+  color:
+    var(--story-ink);
+}
+
+
+/* ------------------------------------------------------------
+   Narrative descriptor paragraph
+   ------------------------------------------------------------ */
+
+.story-scenario-narrative p {
+  margin:
+    0;
+
+  font-size:
+    clamp(
+      13px,
+      1vw,
+      15px
+    );
+
+  font-weight:
+    400;
+
+  line-height:
+    1.55;
+
+  color:
+    rgba(
+      17,
+      17,
+      17,
+      0.68
+    );
+}
+
+
+/* Give the descriptor a little room without
+   returning to the old card-like layout */
+
+.story-scenario-narrative {
+  padding-top:
+    1.15rem;
+}
+
+
+/* ------------------------------------------------------------
+   Slight KPI readability improvement
+   ------------------------------------------------------------ */
+
+.story-scenario-kpi dt {
+  font-size:
+    9px;
+
+  font-weight:
+    600;
+}
+
+
+.story-scenario-kpi dd {
+  font-size:
+    19px;
+}
+
+
+/* ------------------------------------------------------------
+   Responsive
+   ------------------------------------------------------------ */
+
+@media (
+  max-width: 1280px
+) {
+
+  .story-scenario-heading {
+    min-height:
+      70px;
+  }
+
+
+  .story-scenario-heading p {
+    font-size:
+      16px;
+  }
+
+
+  .story-scenario-narrative p {
+    font-size:
+      14px;
+  }
+
+}
+
+
+@media (
+  max-width: 720px
+) {
+
+  .story-scenarios-baseline-note {
+    font-size:
+      0.72rem;
+  }
+
+
+  .story-scenario-heading {
+    min-height:
+      0;
+  }
+
 }

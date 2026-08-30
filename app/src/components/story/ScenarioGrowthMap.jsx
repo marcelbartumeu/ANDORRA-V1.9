@@ -5,7 +5,9 @@ import {
   useState,
 } from "react";
 
-import { useLockedMapbox } from "../../hooks/useLockedMapbox";
+import {
+  useLockedMapbox,
+} from "../../hooks/useLockedMapbox";
 
 import {
   addDataLayer,
@@ -14,7 +16,10 @@ import {
 } from "../../utils/mapboxBase";
 
 import "mapbox-gl/dist/mapbox-gl.css";
-import { hideStoryFrameCorners } from "./StoryMapUtils";
+
+import {
+  hideStoryFrameCorners,
+} from "./StoryMapUtils";
 
 
 const SCENARIOS = {
@@ -31,81 +36,21 @@ const SCENARIOS = {
   },
 
   degrowth: {
-  file: "/growth_degrowth.geojson",
-    },
+    file: "/growth_degrowth.geojson",
+  },
 };
 
 
-const BASE_YEAR = 2024;
+const DATA_BASE_YEAR = 2024;
+const START_YEAR = 2026;
 const END_YEAR = 2049;
 
 
-// Shared scale used by ALL THREE maps.
-//
-// This is important:
-// blue means the same amount of population growth
-// whether we're looking at Continuity, Density,
-// or Overgrowth.
-const GROWTH_COLOR_EXPRESSION = [
-  "interpolate",
-  ["linear"],
-  ["get", "_visualGrowth"],
-
-  0,
-  "#2b171a",
-
-  1,
-  "#4d1c24",
-
-  2,
-  "#6f202c",
-
-  4,
-  "#8f2634",
-
-  7,
-  "#ad4351",
-
-  12,
-  "#cc6f79",
-
-  20,
-  "#e3a2a8",
-
-  30,
-  "#f3d4d6",
-];
-
-
-const GROWTH_OPACITY_EXPRESSION = [
-  "interpolate",
-  ["linear"],
-  ["get", "_visualGrowth"],
-
-  0,
-  0,
-
-  0.5,
-  0.55,
-
-  1,
-  0.7,
-
-  2,
-  0.8,
-
-  4,
-  0.9,
-
-  7,
-  0.95,
-
-  12,
-  1,
-];
-
-
-function clamp(value, min, max) {
+function clamp(
+  value,
+  min,
+  max
+) {
   return Math.max(
     min,
     Math.min(max, value)
@@ -113,72 +58,261 @@ function clamp(value, min, max) {
 }
 
 
-// Estimate the population of each H3 cell
-// for the selected year.
-//
-// The GeoJSON gives us:
-// pop_2024
-// pop_2049
-//
-// We interpolate between those endpoints.
-function computeGrowthData(rawData, year) {
-  const progress = clamp(
-    (year - BASE_YEAR) /
-      (END_YEAR - BASE_YEAR),
-    0,
-    1
+function mixColor(
+  a,
+  b,
+  t
+) {
+  return [
+    Math.round(
+      a[0] +
+        (b[0] - a[0]) * t
+    ),
+
+    Math.round(
+      a[1] +
+        (b[1] - a[1]) * t
+    ),
+
+    Math.round(
+      a[2] +
+        (b[2] - a[2]) * t
+    ),
+  ];
+}
+
+
+function growthColor(
+  magnitude
+) {
+  const dark = [
+    43,
+    23,
+    26,
+  ];
+
+  const middle = [
+    143,
+    38,
+    52,
+  ];
+
+  const pale = [
+    243,
+    212,
+    214,
+  ];
+
+
+  const t =
+    clamp(
+      magnitude / 80,
+      0,
+      1
+    );
+
+
+  let rgb;
+
+
+  if (
+    t < 0.5
+  ) {
+    rgb =
+      mixColor(
+        dark,
+        middle,
+        t * 2
+      );
+  } else {
+    rgb =
+      mixColor(
+        middle,
+        pale,
+        (t - 0.5) * 2
+      );
+  }
+
+
+  return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+}
+
+
+function estimate2026Population(
+  pop2024,
+  pop2049
+) {
+  const progress =
+    (
+      START_YEAR -
+      DATA_BASE_YEAR
+    ) /
+    (
+      END_YEAR -
+      DATA_BASE_YEAR
+    );
+
+
+  return (
+    pop2024 +
+    (
+      pop2049 -
+      pop2024
+    ) *
+      progress
   );
+}
+
+
+function computeGrowthData(
+  rawData,
+  year
+) {
+  const yearProgress =
+    clamp(
+      (
+        year -
+        START_YEAR
+      ) /
+        (
+          END_YEAR -
+          START_YEAR
+        ),
+      0,
+      1
+    );
+
 
   return {
     ...rawData,
 
-    features: rawData.features.map((feature) => {
-      const properties =
-        feature.properties ?? {};
+    features:
+      rawData.features.map(
+        (
+          feature
+        ) => {
+          const properties =
+            feature.properties ??
+            {};
 
-      const startPopulation = Number(
-        properties.pop_2024 ?? 0
-      );
 
-      const endPopulation = Number(
-        properties.pop_2049 ?? 0
-      );
+          const pop2024 =
+            Number(
+              properties.pop_2024 ??
+                0
+            );
 
-      const population =
-        startPopulation +
-        (endPopulation - startPopulation) *
-          progress;
 
-      const growth = Math.max(
-        0,
-        population - startPopulation
-      );
-      // Stretch smaller and medium growth differences visually.
-    // Every scenario uses the exact same transformation.
-    const visualGrowth = Math.sqrt(growth);
+          const pop2049 =
+            Number(
+              properties.pop_2049 ??
+                0
+            );
 
-      return {
-        ...feature,
 
-        properties: {
-          ...properties,
+          const pop2026 =
+            estimate2026Population(
+              pop2024,
+              pop2049
+            );
 
-          _population: population,
 
-          // Non-buildable cells should not
-          // appear as future development.
-          _growth:
-        properties.buildable === false
-            ? 0
-            : growth,
+          const finalChange =
+            pop2049 -
+            pop2026;
 
-        _visualGrowth:
-        properties.buildable === false
-            ? 0
-            : visualGrowth,
-        },
-      };
-    }),
+
+          const currentChange =
+            finalChange *
+            yearProgress;
+
+
+          const shouldShow =
+            properties.buildable !==
+              false &&
+            Math.abs(currentChange) >=
+              0.01;
+
+
+          if (
+            !shouldShow
+          ) {
+            return {
+              ...feature,
+
+              properties: {
+                ...properties,
+
+                _lineColor:
+                  "#2b171a",
+
+                _lineOpacity:
+                  0,
+
+                _lineWidth:
+                  0.5,
+              },
+            };
+          }
+
+
+          const magnitude =
+            Math.sqrt(
+              Math.abs(
+                currentChange
+              )
+            ) * 6;
+
+
+          const lineColor =
+            currentChange < 0
+              ? "#2b171a"
+              : growthColor(
+                  magnitude
+                );
+
+
+          const lineOpacity =
+            clamp(
+              0.4 +
+                yearProgress *
+                  0.5,
+              0.4,
+              0.9
+            );
+
+
+          const lineWidth =
+            clamp(
+              0.65 +
+                magnitude /
+                  45,
+              0.65,
+              1.6
+            );
+
+
+          return {
+            ...feature,
+
+            properties: {
+              ...properties,
+
+              _growthSince2026:
+                currentChange,
+
+              _lineColor:
+                lineColor,
+
+              _lineOpacity:
+                lineOpacity,
+
+              _lineWidth:
+                lineWidth,
+            },
+          };
+        }
+      ),
   };
 }
 
@@ -188,81 +322,150 @@ export default function ScenarioGrowthMap({
   selectedYear,
   mapStyle = DEFAULT_MAP_STYLE,
 }) {
-  const containerRef = useRef(null);
+  const containerRef =
+    useRef(null);
 
-  const rawDataRef = useRef(null);
+  const rawDataRef =
+    useRef(null);
 
-  const yearRef = useRef(selectedYear);
+  const yearRef =
+    useRef(selectedYear);
 
-  const [error, setError] =
+  const [
+    error,
+    setError,
+  ] =
     useState(false);
 
 
-  const config = SCENARIOS[scenario];
+  const config =
+    SCENARIOS[scenario];
+
 
   const sourceId =
     `story-${scenario}-scenario-growth`;
 
+
   const layerId =
-    `story-${scenario}-scenario-growth-layer`;
+    `story-${scenario}-scenario-growth-lines`;
 
 
-  // Add the scenario layer if it doesn't
-  // exist yet, or update its data if it does.
-  const addOverlay = useCallback(
-    (map) => {
-      if (!rawDataRef.current) return;
-
-      const data = computeGrowthData(
-        rawDataRef.current,
-        yearRef.current
-      );
-
-
-      if (!map.getSource(sourceId)) {
-        map.addSource(sourceId, {
-          type: "geojson",
-          data,
-        });
-      } else {
+  const addOverlay =
+    useCallback(
+      (
         map
-          .getSource(sourceId)
-          .setData(data);
-      }
+      ) => {
+        hideStoryFrameCorners(
+          map
+        );
 
 
-      if (!map.getLayer(layerId)) {
-        addDataLayer(map, {
-          id: layerId,
-
-          type: "fill",
-
-          source: sourceId,
-
-          paint: {
-            "fill-color":
-              GROWTH_COLOR_EXPRESSION,
-
-            "fill-opacity":
-              GROWTH_OPACITY_EXPRESSION,
-
-            "fill-outline-color":
-              "rgba(255,255,255,0.05)",
-          },
-        });
-      }
-
-      hideStoryFrameCorners(map);
-    },
-
-    [
-      layerId,
-      sourceId,
-    ]
-  );
+        if (
+          !rawDataRef.current
+        ) {
+          return;
+        }
 
 
-  const { mapRef } =
+        const data =
+          computeGrowthData(
+            rawDataRef.current,
+            yearRef.current
+          );
+
+
+        if (
+          !map.getSource(
+            sourceId
+          )
+        ) {
+          map.addSource(
+            sourceId,
+            {
+              type: "geojson",
+              data,
+            }
+          );
+        } else {
+          map
+            .getSource(
+              sourceId
+            )
+            .setData(
+              data
+            );
+        }
+
+
+        /*
+          IMPORTANT:
+          Use a LINE layer.
+
+          We have experimentally proven
+          that the H3 boundaries render
+          reliably across a hard refresh.
+        */
+        if (
+          !map.getLayer(
+            layerId
+          )
+        ) {
+          addDataLayer(
+            map,
+            {
+              id: layerId,
+
+              type: "line",
+
+              source: sourceId,
+
+              layout: {
+                visibility:
+                  "visible",
+
+                "line-join":
+                  "round",
+
+                "line-cap":
+                  "round",
+              },
+
+              paint: {
+                "line-color": [
+                  "get",
+                  "_lineColor",
+                ],
+
+                "line-opacity": [
+                  "get",
+                  "_lineOpacity",
+                ],
+
+                "line-width": [
+                  "get",
+                  "_lineWidth",
+                ],
+              },
+            }
+          );
+        }
+
+
+        hideStoryFrameCorners(
+          map
+        );
+      },
+
+      [
+        layerId,
+        sourceId,
+      ]
+    );
+
+
+  const {
+    mapRef,
+  } =
     useLockedMapbox(
       containerRef,
       mapStyle,
@@ -270,90 +473,156 @@ export default function ScenarioGrowthMap({
     );
 
 
-  // Load this scenario's GeoJSON once.
-  useEffect(() => {
-    const controller =
-      new AbortController();
+  /*
+    Load spatial scenario data once.
+  */
+  useEffect(
+    () => {
+      const controller =
+        new AbortController();
 
 
-    fetch(config.file, {
-      signal: controller.signal,
-    })
+      setError(false);
 
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(
-            `Could not load ${config.file}: ${response.status}`
-          );
+
+      fetch(
+        config.file,
+        {
+          signal:
+            controller.signal,
         }
+      )
 
-        return response.json();
-      })
+        .then(
+          (
+            response
+          ) => {
+            if (
+              !response.ok
+            ) {
+              throw new Error(
+                `Could not load ${config.file}: ${response.status}`
+              );
+            }
 
-      .then((data) => {
-        rawDataRef.current = data;
 
-        whenStyleReady(
-          mapRef.current,
-          () => {
-            addOverlay(mapRef.current);
+            return response.json();
+          }
+        )
+
+        .then(
+          (
+            data
+          ) => {
+            rawDataRef.current =
+              data;
+
+
+            whenStyleReady(
+              mapRef.current,
+              () => {
+                const map =
+                  mapRef.current;
+
+
+                if (
+                  map
+                ) {
+                  addOverlay(
+                    map
+                  );
+                }
+              }
+            );
+          }
+        )
+
+        .catch(
+          (
+            err
+          ) => {
+            if (
+              err.name !==
+              "AbortError"
+            ) {
+              console.error(
+                `Failed to load ${scenario} scenario map:`,
+                err
+              );
+
+
+              setError(true);
+            }
           }
         );
-      })
-
-      .catch((err) => {
-        if (err.name !== "AbortError") {
-          console.error(
-            `Failed to load ${scenario} scenario map:`,
-            err
-          );
-
-          setError(true);
-        }
-      });
 
 
-    return () => {
-      controller.abort();
-    };
-  }, [
-    addOverlay,
-    config.file,
-    mapRef,
-    scenario,
-  ]);
+      return () => {
+        controller.abort();
+      };
+    },
+
+    [
+      addOverlay,
+      config.file,
+      mapRef,
+      scenario,
+    ]
+  );
 
 
-  // Update the map whenever the shared
-  // year slider changes.
-  useEffect(() => {
-    yearRef.current = selectedYear;
+  /*
+    Shared scenario year slider.
+  */
+  useEffect(
+    () => {
+      yearRef.current =
+        selectedYear;
 
-    const map = mapRef.current;
 
-    if (!map) return;
+      const map =
+        mapRef.current;
 
 
-    whenStyleReady(
-      map,
-      () => {
-        if (!rawDataRef.current) return;
-
-        addOverlay(map);
+      if (
+        !map
+      ) {
+        return;
       }
-    );
-  }, [
-    selectedYear,
-    addOverlay,
-    mapRef,
-  ]);
+
+
+      whenStyleReady(
+        map,
+        () => {
+          if (
+            !rawDataRef.current
+          ) {
+            return;
+          }
+
+
+          addOverlay(
+            map
+          );
+        }
+      );
+    },
+
+    [
+      selectedYear,
+      addOverlay,
+      mapRef,
+    ]
+  );
 
 
   return (
     <div className="story-scenario-growth-map">
 
       <div
-        ref={containerRef}
+        ref={
+          containerRef
+        }
         className="story-scenario-growth-map-canvas"
       />
 

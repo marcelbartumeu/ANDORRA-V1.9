@@ -41,7 +41,7 @@
   {
   "id": "population-scenarios",
   "order": 3,
-  "title": "Three possible futures, year by year",
+  "title": "Four possible futures, year by year",
   "section": "Scenarios to 2049",
   "scenario": "Continuity",
   "availableScenarios": [
@@ -65,7 +65,7 @@
     "GDPpc",
     "CO2_total"
   ],
-  "annotation": "You've seen how little of Andorra is actually available for development. The next question is what happens as population, economic activity, and development pressure evolve within those limits. Continuity, Density, and Overgrowth show three different possible futures for the country through 2049."
+  "annotation": "What happens as population, economic activity, and development pressure evolve within the limits of the build environment? Continuity, Density, Overgrowth, and Degrowth show four possible futures for the country through 2049."
 },
   {
     "id": "accessibility-infrastructure",
