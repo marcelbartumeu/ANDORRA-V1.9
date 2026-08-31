@@ -82,69 +82,135 @@ function ProjectSection() {
       className="story-project-section"
     >
       <div className="story-project-inner">
+
         <header className="story-section-header story-project-header">
-          <div className="story-section-index">06</div>
+
+          <div className="story-section-index">
+            06
+          </div>
 
           <div className="story-section-heading-copy">
-            <p className="story-section-kicker">Chapter 06</p>
-            <h2>About the Project</h2>
-            <p className="story-section-subtitle">
-              Andorra as a country-scale living laboratory for exploring possible futures.
+
+            <p className="story-section-kicker">
+              Chapter 06
             </p>
+
+            <h2>
+              About the Project
+            </h2>
+
+            <p className="story-section-subtitle">
+              Andorra as a country-scale living lab for urban innovation.
+            </p>
+
           </div>
+
         </header>
 
+
         <div className="story-project-grid">
+
           <div className="story-project-copy">
-            <p className="story-project-eyebrow">MIT Media Lab · City Science</p>
+
+            <p className="story-project-eyebrow">
+              MIT Media Lab · The Andorra Living Lab project
+            </p>
+
 
             <p className="story-project-lede">
-              The Andorra Country Scale Digital Twin brings together national,
-              spatial, social, economic, environmental, and infrastructure data
-              so alternative long-term futures can be compared in one interactive system.
+              The Andorra Living Lab project is a collaboration exploring
+              how an entire country can become a living laboratory for
+              urban innovation.
             </p>
+
 
             <p className="story-project-body">
-              Rather than presenting one forecast as inevitable, the project is designed
-              to make trade-offs visible and support more informed conversations about
-              growth, land, public services, resources, and quality of life.
+                The initiative brings together research in mobility, tourism, energy and
+                the environment, innovation, and dynamic urban planning. Using data science
+                and spatial analysis, the lab develops tools for understanding Andorra&apos;s
+                changing systems and exploring new approaches to planning, decision-making,
+                and community engagement.
             </p>
 
+            <p className="story-project-body story-project-body--site-purpose">
+  This website brings that work into one interactive story, helping visitors
+  explore how the lab&apos;s models, data, and scenarios translate into possible
+  futures for Andorra.
+</p>
+
+
             <div className="story-project-links">
-              <a
-                href="https://www.media.mit.edu/projects/andorra/overview/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Andorra Country Scale Digital Twin <span aria-hidden="true">↗</span>
-              </a>
 
               <a
                 href="https://www.media.mit.edu/projects/city-science-andorra/overview/"
                 target="_blank"
                 rel="noreferrer"
               >
-                City Science Lab @ Andorra <span aria-hidden="true">↗</span>
+                Explore The Andorra Living Lab project{" "}
+                <span aria-hidden="true">
+                  ↗
+                </span>
               </a>
+
+              <a
+            href="https://www.media.mit.edu/projects/city-science-andorra/people/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Meet our Team{" "}
+            <span aria-hidden="true">
+              ↗
+            </span>
+          </a>
+
             </div>
+
           </div>
 
-          <div
-            className="story-project-image"
-            role="img"
-            aria-label="Andorra mountain landscape"
-            style={{ backgroundImage: `url("${PHOTO_PATHS.valley}")` }}
-          >
-            <span>MIT MEDIA LAB · CITY SCIENCE · ANDORRA</span>
+
+          <div className="story-project-image-wrap">
+
+            <div
+              className="story-project-image"
+              role="img"
+              aria-label="CityScope Andorra interactive urban planning model"
+              style={{
+                backgroundImage:
+                  'url("/story/city-science-andorra.jpg")',
+              }}
+            >
+              <span>
+                Photo: Ariel Noyman / City Science group, MIT Media Lab
+              </span>
+            </div>
+
+
           </div>
+
         </div>
+
 
         <div className="story-project-footer">
-          <span>Research · Data · Scenario exploration</span>
-          <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+
+          <span>
+            MIT Media Lab · The Andorra Living Lab project
+
+          </span>
+
+          <button
+            type="button"
+            onClick={() =>
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              })
+            }
+          >
             Back to top ↑
           </button>
+
         </div>
+
       </div>
     </section>
   );
@@ -239,9 +305,9 @@ export default function StoryScrolly() {
           {navOpen ? (
             <div className="story-nav-content">
               <div className="story-nav-brand-block">
-                <p className="story-nav-brand">ANDORRA FUTURES</p>
+                <p className="story-nav-brand">ANDORRA:<br></br>CHOOSING A FUTURE</p>
                 <p className="story-nav-tagline">
-                  A living inquiry into land, life, and choices for 2049.
+                  A country-scale exploration of change.
                 </p>
               </div>
 
@@ -303,8 +369,9 @@ export default function StoryScrolly() {
           </h1>
 
           <p className="story-hero-deck">
-            A country-scale exploration of how land, population, infrastructure,
-            prosperity, and environmental pressure could evolve through 2049.
+            
+            Andorra is home to roughly 89,000 people, but its size makes every
+             future growth decision unusually consequential.
           </p>
 
           <button

@@ -7587,3 +7587,56 @@ body {
   font-weight: 400;
   color: black;
 }
+
+
+.story-project-grid {
+  align-items: stretch;
+}
+
+.story-project-image-wrap {
+  position: relative;
+  min-height: 560px;
+  align-self: stretch;
+  overflow: hidden;
+}
+
+.story-project-image-wrap .story-project-image {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+
+  background-size: cover;
+  background-position: center;
+}
+
+
+.story-project-body {
+  font-size: 18px;
+  line-height: 1.6;
+  font-weight: 500;
+
+  color: rgba(
+    255,
+    255,
+    255,
+    0.78
+  );
+}
+
+
+.story-project-body--site-purpose {
+  margin-top: 22px;
+
+  font-size: 19px;
+  font-weight: 600;
+
+  color: rgba(
+    255,
+    255,
+    255,
+    0.9
+  );
+}
