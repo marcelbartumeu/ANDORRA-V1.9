@@ -33,7 +33,7 @@ const SECTION_TONES = {
   "buildable-land": "dark",
   "population-scenarios": "light",
   "accessibility-infrastructure": "dark",
-  "choose-future": "dark",
+  "choose-future": "light",
 };
 
 function sectionTitle(step) {

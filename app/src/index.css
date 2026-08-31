@@ -7426,3 +7426,164 @@ body {
     0.68
   );
 }
+
+
+.story-section--light .story-choice-intro {
+  color: rgba(17, 17, 17, 0.68);
+}
+
+.story-section--light .story-choice-control-label {
+  color: var(--story-red);
+}
+
+.story-section--light .story-choice-button {
+  border-color: rgba(17, 17, 17, 0.22);
+  background: transparent;
+  color: rgba(17, 17, 17, 0.72);
+}
+
+.story-section--light .story-choice-button:hover {
+  border-color: rgba(17, 17, 17, 0.5);
+}
+
+.story-section--light .story-choice-button.is-active {
+  border-color: var(--story-red);
+  background: var(--story-red);
+  color: #fff;
+}
+
+
+/* Make the radar panel light too */
+.story-section--light .story-radar-card {
+  background: #ffffff;
+  border-color: rgba(17, 17, 17, 0.16);
+}
+
+.story-section--light .story-radar-heading span {
+  color: var(--story-ink);
+}
+
+.story-section--light .story-radar-heading strong {
+  color: var(--story-red);
+}
+
+.story-section--light .story-radar-grid-ring,
+.story-section--light .story-radar-axis-line {
+  stroke: rgba(17, 17, 17, 0.15);
+}
+
+.story-section--light .story-radar-note {
+  color: rgba(17, 17, 17, 0.48);
+}
+
+/* ============================================================
+   CHOOSE FUTURE — FIX TEXT FOR LIGHT BACKGROUND
+   ============================================================ */
+
+/* General text inside the radar card */
+.story-section--light .story-radar-card {
+  color: #171717;
+}
+
+
+/* Radar heading */
+.story-section--light .story-radar-heading span {
+  color: #171717;
+}
+
+.story-section--light .story-radar-heading strong {
+  color: var(--story-red);
+}
+
+
+/* SVG axis names + values around the radar */
+.story-section--light .story-radar-card text {
+  fill: #242424 !important;
+}
+
+
+/* "What This Means" panel */
+.story-section--light .story-radar-card h3,
+.story-section--light .story-radar-card h4,
+.story-section--light .story-radar-card p,
+.story-section--light .story-radar-card li,
+.story-section--light .story-radar-card span {
+  color: #2b2b2b;
+}
+
+
+/* Keep accent labels / bullets red */
+.story-section--light .story-radar-card strong {
+  color: var(--story-red);
+}
+
+
+/* Supporting explanation text */
+.story-section--light .story-radar-blurb p,
+.story-section--light .story-radar-note {
+  color: rgba(20, 20, 20, 0.66);
+}
+
+
+/* Grid lines should be visible but subtle */
+.story-section--light .story-radar-grid-ring,
+.story-section--light .story-radar-axis-line {
+  stroke: rgba(20, 20, 20, 0.18);
+}
+
+
+.story-section--light .story-radar-card div,
+.story-section--light .story-radar-card p,
+.story-section--light .story-radar-card span,
+.story-section--light .story-radar-card li,
+.story-section--light .story-radar-card h1,
+.story-section--light .story-radar-card h2,
+.story-section--light .story-radar-card h3,
+.story-section--light .story-radar-card h4,
+.story-section--light .story-radar-card h5,
+.story-section--light .story-radar-card h6 {
+  color: #252525 !important;
+}
+
+
+/* Keep the selected year / important values red */
+.story-section--light .story-radar-heading strong,
+.story-section--light .story-radar-card strong {
+  color: var(--story-red) !important;
+}
+
+
+/* Supporting copy on the right */
+.story-section--light .story-radar-blurb,
+.story-section--light .story-radar-blurb p {
+  color: rgba(37, 37, 37, 0.72) !important;
+}
+
+
+/* Small explanatory note beneath radar */
+.story-section--light .story-radar-note {
+  color: rgba(37, 37, 37, 0.58) !important;
+}
+
+
+.story-choice-button {
+  padding: 16px 28px;
+  min-height: 56px;
+
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+}
+
+.story-choice-intro.story-editorial-lede {
+  width: 100%;
+  max-width: none;
+
+  margin: 0 0 48px;
+
+  font-size: clamp(20px, 2vw, 31px);
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+  color: black;
+}

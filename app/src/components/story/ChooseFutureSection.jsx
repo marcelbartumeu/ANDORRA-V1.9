@@ -1805,66 +1805,10 @@ export default function ChooseFutureSection({
     <div className="story-choice-explorer">
 
       {step?.annotation && (
-        <p className="story-choice-intro">
+        <p className="story-choice-intro story-editorial-lede">
           {step.annotation}
         </p>
       )}
-
-
-      {/* PRIORITY SELECTOR */}
-
-      <div className="story-choice-control-group">
-
-        <span className="story-choice-control-label">
-          What do you prioritize?
-        </span>
-
-
-        <div className="story-choice-buttons">
-
-          {Object.entries(
-            PRIORITIES
-          ).map(
-            ([
-              priorityId,
-              priorityOption,
-            ]) => (
-              <button
-                key={
-                  priorityId
-                }
-
-                type="button"
-
-                aria-pressed={
-                  selectedPriority ===
-                  priorityId
-                }
-
-                className={
-                  `story-choice-button ${
-                    selectedPriority ===
-                    priorityId
-                      ? "is-active"
-                      : ""
-                  }`
-                }
-
-                onClick={() =>
-                  setSelectedPriority(
-                    priorityId
-                  )
-                }
-              >
-                {
-                  priorityOption.label
-                }
-              </button>
-            )
-          )}
-
-        </div>
-      </div>
 
 
       {/* SCENARIO SELECTOR */}
@@ -1916,6 +1860,62 @@ export default function ChooseFutureSection({
               >
                 {
                   scenario.label
+                }
+              </button>
+            )
+          )}
+
+        </div>
+      </div>
+
+
+      {/* PRIORITY SELECTOR */}
+
+      <div className="story-choice-control-group">
+
+        <span className="story-choice-control-label">
+          What do you prioritize?
+        </span>
+
+
+        <div className="story-choice-buttons">
+
+          {Object.entries(
+            PRIORITIES
+          ).map(
+            ([
+              priorityId,
+              priorityOption,
+            ]) => (
+              <button
+                key={
+                  priorityId
+                }
+
+                type="button"
+
+                aria-pressed={
+                  selectedPriority ===
+                  priorityId
+                }
+
+                className={
+                  `story-choice-button ${
+                    selectedPriority ===
+                    priorityId
+                      ? "is-active"
+                      : ""
+                  }`
+                }
+
+                onClick={() =>
+                  setSelectedPriority(
+                    priorityId
+                  )
+                }
+              >
+                {
+                  priorityOption.label
                 }
               </button>
             )
@@ -2457,10 +2457,9 @@ export default function ChooseFutureSection({
                   {/* FIXED-SCALE NOTE */}
 
                   <p className="story-radar-note">
-                    Each axis uses a fixed scale shared by all four modeled
-                    futures. The value printed beside each axis is the actual
-                    2049 model output. Farther outward means a higher value on
-                    that metric — not necessarily a better outcome.
+                    Each axis uses a fixed scale shared by all modeled
+                    futures — each axis' value is the
+                    2049 model output.
                   </p>
 
                 </div>

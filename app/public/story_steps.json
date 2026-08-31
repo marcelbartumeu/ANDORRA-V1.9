@@ -96,7 +96,6 @@
     "id": "choose-future",
     "order": 6,
     "eyebrow": "06 / Choose Andorra's Future",
-    "title": "The future is a decision, not just a forecast",
     "section": "Choose Andorra's Future",
     "scenario": "All",
     "year": 2050,
@@ -109,7 +108,7 @@
       "growth_degrowth"
     ],
     "kpis": ["Pop", "GDPpc", "CO2_total", "Access"],
-    "annotation": "Every planning decision improves some outcomes while putting pressure on others. This final experience lets the user compare those tradeoffs directly: how policy choices change population distribution, land use, infrastructure demand, accessibility, environmental pressure, and social outcomes.",
+    "annotation": "Choose a scenario and a priority to see how different paths shape infrastructure, access, the environment, and everyday life.",
     "reflectionPrompt": "Which future would you choose for Andorra, and why?"
   }
 ]
