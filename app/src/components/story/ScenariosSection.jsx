@@ -217,8 +217,8 @@ export default function ScenariosSection({
 
 
   /*
-    Load the same four existing
-    scenario timeseries files.
+    Load all four scenario
+    timeseries files.
   */
   useEffect(
     () => {
@@ -283,6 +283,7 @@ export default function ScenariosSection({
                 err
               );
 
+
               setError(
                 true
               );
@@ -300,11 +301,8 @@ export default function ScenariosSection({
 
 
   /*
-    ACTUAL model rows.
-
-    These are still used for:
-    - 2027–2049 displayed values
-    - driving map progression
+    Actual model rows for the
+    currently selected year.
   */
   const actualSelectedRows =
     useMemo(
@@ -334,10 +332,11 @@ export default function ScenariosSection({
 
 
   /*
-    Shared 2026 comparison baseline.
+    Shared displayed 2026 baseline.
 
-    Continuity acts as the common
-    baseline for the displayed stats.
+    Continuity provides the common
+    starting values shown across
+    all four scenarios.
   */
   const shared2026Row =
     useMemo(
@@ -357,8 +356,8 @@ export default function ScenariosSection({
 
 
         /*
-          Fallback only if Continuity
-          has not loaded for some reason.
+          Fallback if Continuity has
+          not loaded for some reason.
         */
         for (
           const scenario
@@ -390,13 +389,15 @@ export default function ScenariosSection({
 
 
   /*
-    DISPLAY rows.
+    Values displayed under the maps.
 
-    At 2026 every scenario visibly
-    begins from the exact same baseline.
+    2026:
+      all four scenarios show the
+      same comparison baseline.
 
-    From 2027 onward, use the actual
-    scenario model output.
+    2027–2049:
+      use each scenario's actual
+      modeled values.
   */
   const displayRows =
     useMemo(
@@ -429,81 +430,14 @@ export default function ScenariosSection({
     );
 
 
-  /*
-    Values used by the spatial map
-    interpolation.
-
-    These remain scenario-specific.
-  */
-  const mapPopulationValues =
-    useMemo(
-      () => {
-        return Object.fromEntries(
-          SCENARIOS.map(
-            (
-              scenario
-            ) => {
-              const rows =
-                scenarioData[
-                  scenario.id
-                ];
-
-
-              return [
-                scenario.id,
-                {
-                  selected:
-                    findYear(
-                      rows,
-                      selectedYear
-                    )?.Pop ??
-                    null,
-
-                  baseline:
-                    findYear(
-                      rows,
-                      START_YEAR
-                    )?.Pop ??
-                    null,
-
-                  end:
-                    findYear(
-                      rows,
-                      END_YEAR
-                    )?.Pop ??
-                    null,
-                },
-              ];
-            }
-          )
-        );
-      },
-      [
-        scenarioData,
-        selectedYear,
-      ]
-    );
-
-
   return (
     <>
 
       <div className="story-scenarios-intro">
 
-        <div>
-
-          <p className="story-editorial-lede">
-            {step.annotation}
-          </p>
-
-
-          <p className="story-scenarios-baseline-note">
-            2026 is shown as a shared comparison baseline.
-            From 2027 onward, the values follow each
-            scenario&apos;s modeled outputs.
-          </p>
-
-        </div>
+        <p className="story-editorial-lede">
+          {step.annotation}
+        </p>
 
 
         <div className="story-scenarios-year-block">
@@ -521,114 +455,78 @@ export default function ScenariosSection({
       </div>
 
 
-      <div className="story-scenarios-grid">
+      {/* =====================================================
+          1. SCENARIO HEADINGS + MAPS
+          ===================================================== */}
+
+      <div className="story-scenarios-grid story-scenarios-grid--maps">
 
         {SCENARIOS.map(
           (
             scenario,
             index
-          ) => {
-
-            const mapValues =
-              mapPopulationValues[
+          ) => (
+            <article
+              key={
                 scenario.id
-              ] ?? {};
+              }
+              className="story-scenario-column"
+            >
+
+              <header className="story-scenario-heading">
+
+                <span className="story-scenario-index">
+                  {String(
+                    index + 1
+                  ).padStart(
+                    2,
+                    "0"
+                  )}
+                </span>
 
 
-            return (
-              <article
-                key={
-                  scenario.id
-                }
-                className="story-scenario-column"
-              >
-
-                <header className="story-scenario-heading">
-
-                  <span className="story-scenario-index">
-                    {String(
-                      index + 1
-                    ).padStart(
-                      2,
-                      "0"
-                    )}
-                  </span>
-
-
-                  <div>
-
-                    <strong>
-                      {
-                        scenario.label
-                      }
-                    </strong>
-
-                    <p>
-                      {
-                        scenario.subtitle
-                      }
-                    </p>
-
-                  </div>
-
-                </header>
-
-
-                <div className="story-map-card story-map-card--square story-scenario-map-card">
-
-                  <ScenarioGrowthMap
-                    scenario={
-                      scenario.id
-                    }
-                    selectedYear={
-                      selectedYear
-                    }
-                    selectedPopulation={
-                      mapValues.selected
-                    }
-                    baselinePopulation={
-                      mapValues.baseline
-                    }
-                    endPopulation={
-                      mapValues.end
-                    }
-                  />
-
-                </div>
-
-
-                <ScenarioKpis
-                  row={
-                    displayRows[
-                      scenario.id
-                    ]
-                  }
-                />
-
-
-                <div className="story-scenario-narrative">
+                <div>
 
                   <strong>
                     {
-                      scenario.narrativeTitle
+                      scenario.label
                     }
                   </strong>
 
                   <p>
                     {
-                      scenario.narrative
+                      scenario.subtitle
                     }
                   </p>
 
                 </div>
 
-              </article>
-            );
-          }
+              </header>
+
+
+              <div className="story-map-card story-map-card--square story-scenario-map-card">
+
+                <ScenarioGrowthMap
+                  scenario={
+                    scenario.id
+                  }
+                  selectedYear={
+                    selectedYear
+                  }
+                />
+
+              </div>
+
+            </article>
+          )
         )}
 
       </div>
 
+
+      {/* =====================================================
+          2. SHARED YEAR SLIDER + LEGEND
+          ===================================================== */}
 
       <div className="story-scenarios-controls">
 
@@ -640,9 +538,11 @@ export default function ScenariosSection({
               {START_YEAR}
             </span>
 
+
             <strong>
               {selectedYear}
             </strong>
+
 
             <span>
               {END_YEAR}
@@ -692,7 +592,9 @@ export default function ScenariosSection({
               Lower growth
             </span>
 
+
             <div className="story-growth-gradient" />
+
 
             <span>
               Higher growth
@@ -701,6 +603,56 @@ export default function ScenariosSection({
           </div>
 
         </div>
+
+      </div>
+
+
+      {/* =====================================================
+          3. KPI STATS + NARRATIVES
+          ===================================================== */}
+
+      <div className="story-scenarios-grid story-scenarios-grid--details">
+
+        {SCENARIOS.map(
+          (
+            scenario
+          ) => (
+            <div
+              key={
+                scenario.id
+              }
+              className="story-scenario-column"
+            >
+
+              <ScenarioKpis
+                row={
+                  displayRows[
+                    scenario.id
+                  ]
+                }
+              />
+
+
+              <div className="story-scenario-narrative">
+
+                <strong>
+                  {
+                    scenario.narrativeTitle
+                  }
+                </strong>
+
+
+                <p>
+                  {
+                    scenario.narrative
+                  }
+                </p>
+
+              </div>
+
+            </div>
+          )
+        )}
 
       </div>
 
