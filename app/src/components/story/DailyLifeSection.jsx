@@ -16,7 +16,7 @@ const SCENARIOS = [
     label: "Degrowth",
     timeseries:
       "/model/Degrowth_timeseries.json",
-    color: "#89928a",
+    color: "#067137",
   },
 
   {
@@ -24,7 +24,7 @@ const SCENARIOS = [
     label: "Continuity",
     timeseries:
       "/model/Continuity_timeseries.json",
-    color: "#d4d0c8",
+    color: "#2a4dad",
   },
 
   {
@@ -32,7 +32,7 @@ const SCENARIOS = [
     label: "Density",
     timeseries:
       "/model/Density_timeseries.json",
-    color: "#8f2634",
+    color: "#e8b30c",
   },
 
   {
@@ -40,7 +40,7 @@ const SCENARIOS = [
     label: "Overgrowth",
     timeseries:
       "/model/Overgrowth_timeseries.json",
-    color: "#c66c76",
+    color: "#bc0638",
   },
 ];
 

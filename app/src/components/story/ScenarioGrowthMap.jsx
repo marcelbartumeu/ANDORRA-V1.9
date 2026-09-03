@@ -86,21 +86,21 @@ function growthColor(
   magnitude
 ) {
   const dark = [
-    43,
-    23,
-    26,
+    25,
+    25,
+    25,
   ];
 
   const middle = [
-    143,
-    38,
-    52,
+    150,
+    150,
+    150,
   ];
 
   const pale = [
-    243,
-    212,
-    214,
+    255,
+    255,
+    255,
   ];
 
 
@@ -244,7 +244,7 @@ function computeGrowthData(
                 ...properties,
 
                 _lineColor:
-                  "#2b171a",
+                  "#191919",
 
                 _lineOpacity:
                   0,
@@ -265,11 +265,11 @@ function computeGrowthData(
 
 
           const lineColor =
-            currentChange < 0
-              ? "#2b171a"
-              : growthColor(
-                  magnitude
-                );
+  currentChange < 0
+    ? "#191919"
+    : growthColor(
+        magnitude
+      );
 
 
           const lineOpacity =

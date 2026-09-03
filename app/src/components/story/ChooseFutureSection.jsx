@@ -16,25 +16,28 @@ const SCENARIOS = [
   {
     id: "Degrowth",
     label: "Degrowth",
-    color: "#89928a",
+    color: "#067137",
     url: "/model/Degrowth_timeseries.json",
   },
+
   {
     id: "Continuity",
     label: "Continuity",
-    color: "#6f7785",
+    color: "#2a4dad",
     url: "/model/Continuity_timeseries.json",
   },
+
   {
     id: "Density",
     label: "Density",
-    color: "#8f2634",
+    color: "#e8b30c",
     url: "/model/Density_timeseries.json",
   },
+
   {
     id: "Overgrowth",
     label: "Overgrowth",
-    color: "#c58a4a",
+    color: "#bc0638",
     url: "/model/Overgrowth_timeseries.json",
   },
 ];

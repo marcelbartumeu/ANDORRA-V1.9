@@ -16,6 +16,7 @@ const SCENARIOS = [
     id: "degrowth",
     label: "Degrowth",
     subtitle: "Population contraction",
+    color: "#067137",
     timeseries:
       "/model/Degrowth_timeseries.json",
     narrativeTitle:
@@ -28,6 +29,7 @@ const SCENARIOS = [
     id: "continuity",
     label: "Continuity",
     subtitle: "Baseline trajectory",
+    color: "#2a4dad",
     timeseries:
       "/model/Continuity_timeseries.json",
     narrativeTitle:
@@ -40,6 +42,7 @@ const SCENARIOS = [
     id: "density",
     label: "Density",
     subtitle: "More compact growth",
+    color: "#e8b30c",
     timeseries:
       "/model/Density_timeseries.json",
     narrativeTitle:
@@ -52,6 +55,7 @@ const SCENARIOS = [
     id: "overgrowth",
     label: "Overgrowth",
     subtitle: "Rapid growth",
+    color: "#bc0638",
     timeseries:
       "/model/Overgrowth_timeseries.json",
     narrativeTitle:
@@ -467,22 +471,19 @@ export default function ScenariosSection({
             index
           ) => (
             <article
-              key={
-                scenario.id
-              }
-              className="story-scenario-column"
-            >
+  key={
+    scenario.id
+  }
+  className="story-scenario-column"
+  style={{
+    "--scenario-color":
+      scenario.color,
+  }}
+>
 
               <header className="story-scenario-heading">
 
-                <span className="story-scenario-index">
-                  {String(
-                    index + 1
-                  ).padStart(
-                    2,
-                    "0"
-                  )}
-                </span>
+                
 
 
                 <div>
@@ -614,15 +615,19 @@ export default function ScenariosSection({
       <div className="story-scenarios-grid story-scenarios-grid--details">
 
         {SCENARIOS.map(
-          (
-            scenario
-          ) => (
+  (
+    scenario
+  ) => (
             <div
-              key={
-                scenario.id
-              }
-              className="story-scenario-column"
-            >
+  key={
+    scenario.id
+  }
+  className="story-scenario-column"
+  style={{
+    "--scenario-color":
+      scenario.color,
+  }}
+>
 
               <ScenarioKpis
                 row={

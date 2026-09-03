@@ -2615,23 +2615,6 @@ body {
   color: rgba(255, 255, 255, 0.4);
 }
 
-.story-growth-gradient {
-  height: 8px;
-
-  border-radius: 999px;
-
-  background: linear-gradient(
-    90deg,
-    #2447ff 0%,
-    #4f6fff 25%,
-    #9b6dff 50%,
-    #f07cc3 75%,
-    #ffd878 100%
-  );
-
-  box-shadow: 0 0 18px rgba(155, 109, 255, 0.22);
-}
-
 .story-scenario-narrative-grid {
   display: grid;
 
@@ -3904,7 +3887,7 @@ body {
   font-weight: 700;
   line-height: 0.82;
   letter-spacing: -0.04em;
-  color: #b4b4b4;
+  color: var(--story-red);
 }
 
 .story-section-kicker {
@@ -4488,14 +4471,19 @@ body {
 }
 
 .story-growth-gradient {
+  height: 8px;
+
+  border: 1px solid #b8b8b8;
+
+  border-radius: 999px;
+
   background: linear-gradient(
     90deg,
-    #2b171a 0%,
-    #6f202c 30%,
-    #8f2634 52%,
-    #cc6f79 76%,
-    #f3d4d6 100%
+    #191919 0%,
+    #969696 50%,
+    #ffffff 100%
   );
+
   box-shadow: none;
 }
 
@@ -6916,4 +6904,249 @@ body {
 
 .story-today-question-beat {
   margin-top: 1rem;
+}
+
+/* =========================================================
+   SCENARIO COLOR SYSTEM
+   ========================================================= */
+
+:root {
+  --scenario-overgrowth: #bc0638;
+  --scenario-degrowth: #067137;
+  --scenario-continuity: #2a4dad;
+  --scenario-density: #e8b30c;
+}
+
+/* =========================================================
+   SCENARIO COLOR SYSTEM
+   ========================================================= */
+
+:root {
+  --scenario-overgrowth: #bc0638;
+  --scenario-degrowth: #067137;
+  --scenario-continuity: #2a4dad;
+  --scenario-density: #e8b30c;
+}
+
+
+/* =========================================================
+   SCENARIOS TO 2049
+   ========================================================= */
+
+
+/*
+  Scenario title above each map:
+  DEGROWTH, CONTINUITY, DENSITY, OVERGROWTH
+*/
+.story-scenario-column .story-scenario-heading strong {
+  color: var(--scenario-color);
+}
+
+
+/*
+  Population
+  GDP / capita
+  Total CO₂
+*/
+.story-scenario-column .story-scenario-kpi dd {
+  color: var(--scenario-color);
+}
+
+
+/* =========================================================
+   EFFECTS ON DAILY LIFE
+   ========================================================= */
+
+
+/*
+  DailyLifeSection already supplies --story-bar-color
+  dynamically from each scenario.
+*/
+.story-impact-bar-fill {
+  background: var(--story-bar-color);
+}
+
+
+/* =========================================================
+   CHOOSE ANDORRA'S FUTURE — SCENARIO BUTTONS
+   ========================================================= */
+
+
+/*
+  Scenario buttons always visibly carry
+  their scenario identity.
+*/
+.story-choice-scenario-button {
+  border-color: var(--scenario-color) !important;
+
+  background: var(--scenario-color) !important;
+
+  color: #ffffff !important;
+
+  opacity: 0.72;
+
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+
+.story-choice-scenario-button:hover {
+  border-color: var(--scenario-color) !important;
+
+  background: var(--scenario-color) !important;
+
+  color: #ffffff !important;
+
+  opacity: 0.9;
+
+  transform: translateY(-1px);
+}
+
+
+/*
+  Selected future is fully saturated and
+  gets a stronger outline.
+*/
+.story-choice-scenario-button.is-active {
+  border-color: var(--scenario-color) !important;
+
+  background: var(--scenario-color) !important;
+
+  color: #ffffff !important;
+
+  opacity: 1;
+
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 0 0 4px var(--scenario-color);
+}
+
+
+.story-choice-scenario-button[style*="#e8b30c"] {
+  color: #111111 !important;
+}
+
+.story-choice-scenario-button[style*="#e8b30c"].is-active {
+  color: #111111 !important;
+}
+
+.story-section--light .story-choice-control-label {
+  color: #111111 !important;
+
+  font-size: 0.8rem;
+
+  font-weight: 800;
+
+  letter-spacing: 0.09em;
+}
+
+
+.story-section--light
+  .story-choice-buttons:not(.story-choice-scenario-buttons)
+  .story-choice-button.is-active {
+
+  border-color: #111111;
+
+  background: #111111;
+
+  color: #ffffff;
+}
+
+
+.story-section--light
+  .story-choice-buttons:not(.story-choice-scenario-buttons)
+  .story-choice-button:hover {
+
+  border-color: #111111;
+}
+
+.story-section--light .story-radar-heading > strong {
+  color: #111111 !important;
+}
+
+/* =========================================================
+   EFFECTS ON DAILY LIFE — WHITE ACTIVE ACCENTS
+   ========================================================= */
+
+
+/* Selected metric button:
+   Education / Mobility / Healthcare / GDP / Energy */
+.story-impact-tab--active {
+  border-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #111111 !important;
+}
+
+
+/* "COMPARE THE FUTURES" */
+.story-impact-heading > span {
+  color: #ffffff !important;
+}
+
+
+/* Selected year above the slider */
+.story-section--dark .story-year-slider-header strong {
+  color: #ffffff !important;
+}
+
+
+/* Slider circle / thumb */
+.story-section--dark
+  .story-scenarios-slider
+  input[type="range"]::-webkit-slider-thumb {
+  background: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+
+/* Firefox slider circle */
+.story-section--dark
+  .story-scenarios-slider
+  input[type="range"]::-moz-range-thumb {
+  background: #ffffff;
+  border-color: #ffffff;
+}
+
+/* =========================================================
+   SCENARIOS TO 2049 — BLACK YEAR + SLIDER ACCENTS
+   ========================================================= */
+
+
+/* "SELECTED YEAR" label at top right */
+.story-section--light .story-scenarios-year-block span {
+  color: #111111 !important;
+}
+
+
+/* Large selected year at top right */
+.story-section--light .story-scenarios-year-block strong {
+  color: #111111 !important;
+}
+
+
+/* Year displayed above the slider */
+.story-section--light
+  .story-scenarios-slider
+  .story-year-slider-header strong {
+  color: #111111 !important;
+}
+
+
+/* Slider circle — Chrome / Safari */
+.story-section--light
+  .story-scenarios-slider
+  input[type="range"]::-webkit-slider-thumb {
+  background: #111111 !important;
+  border-color: #111111 !important;
+}
+
+
+/* Slider circle — Firefox */
+.story-section--light
+  .story-scenarios-slider
+  input[type="range"]::-moz-range-thumb {
+  background: #111111;
+  border-color: #111111;
 }
