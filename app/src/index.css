@@ -3881,7 +3881,7 @@ body {
 }
 
 .story-section--light {
-  background: var(--story-paper);
+  background: #ffffff;
   color: var(--story-ink);
 }
 
@@ -3904,7 +3904,7 @@ body {
   font-weight: 700;
   line-height: 0.82;
   letter-spacing: -0.04em;
-  color: var(--story-red);
+  color: #b4b4b4;
 }
 
 .story-section-kicker {
@@ -6567,4 +6567,353 @@ body {
   font-weight: 600;
 
   color: rgba(255, 255, 255, 0.9);
+}
+/* =========================================================
+   BUILDABLE LAND — CLEARER CLICKABLE TEXT CONTROLS
+   ========================================================= */
+
+
+/*
+  Keep the constraint labels text-based,
+  but give them a subtle rectangular boundary
+  so they clearly read as clickable.
+*/
+.story-buildable-inline-control {
+  appearance: none;
+
+  display: inline-block;
+
+  margin: 0 0.08em;
+
+  padding: 0.08em 0.34em 0.12em;
+
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(--constraint-color) 48%,
+      transparent
+    );
+
+  border-radius: 2px;
+
+  background: transparent;
+  background-image: none !important;
+
+  font: inherit;
+
+  font-weight: 750;
+
+  line-height: 1.15;
+
+  color: var(--constraint-color);
+
+  cursor: pointer;
+
+  text-align: left;
+
+  text-decoration: none !important;
+
+  text-shadow: none !important;
+  box-shadow: none !important;
+
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease;
+}
+
+
+/*
+  Hover:
+  slightly strengthen the box without making
+  the control feel like a traditional button.
+*/
+.story-buildable-inline-control:hover {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--constraint-color) 82%,
+      transparent
+    );
+
+  background:
+    color-mix(
+      in srgb,
+      var(--constraint-color) 8%,
+      transparent
+    );
+
+  filter: none !important;
+
+  text-decoration: none !important;
+}
+
+
+/*
+  Currently selected constraint:
+  retain the constraint color and add only
+  a very subtle tinted background.
+*/
+.story-buildable-inline-control.is-active {
+  border-color: var(--constraint-color);
+
+  background:
+    color-mix(
+      in srgb,
+      var(--constraint-color) 14%,
+      transparent
+    );
+
+  background-image: none !important;
+
+  text-decoration: none !important;
+
+  text-shadow: none !important;
+  box-shadow: none !important;
+
+  filter: none !important;
+}
+
+
+/*
+  Keyboard accessibility.
+*/
+.story-buildable-inline-control:focus-visible {
+  outline: 2px solid var(--constraint-color);
+
+  outline-offset: 3px;
+}
+
+/* =========================================================
+   BUILDABLE LAND — FILLED CLICKABLE CONTROLS
+   ========================================================= */
+
+
+/*
+  Each constraint is filled with its corresponding
+  map color, with white text for contrast.
+*/
+.story-buildable-inline-control {
+  appearance: none;
+
+  display: inline-block;
+
+  margin: 0 0.08em;
+
+  padding: 0.12em 0.4em 0.16em;
+
+  border: 1px solid var(--constraint-color);
+
+  border-radius: 2px;
+
+  background: var(--constraint-color) !important;
+  background-image: none !important;
+
+  font: inherit;
+
+  font-weight: 750;
+
+  line-height: 1.15;
+
+  color: #ffffff !important;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  text-decoration: none !important;
+
+  text-shadow: none !important;
+  box-shadow: none !important;
+
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    border-color 160ms ease;
+}
+
+
+/*
+  Hover keeps the same color, but gives the
+  control a tiny amount of movement/feedback.
+*/
+.story-buildable-inline-control:hover {
+  background: var(--constraint-color) !important;
+
+  color: #ffffff !important;
+
+  opacity: 0.88;
+
+  transform: translateY(-1px);
+
+  filter: none !important;
+
+  text-decoration: none !important;
+}
+
+
+/*
+  Active constraint stays fully saturated
+  while the others remain slightly quieter.
+*/
+.story-buildable-inline-control.is-active {
+  background: var(--constraint-color) !important;
+
+  background-image: none !important;
+
+  border-color: var(--constraint-color);
+
+  color: #ffffff !important;
+
+  opacity: 1;
+
+  text-decoration: none !important;
+
+  text-shadow: none !important;
+  box-shadow: none !important;
+
+  filter: none !important;
+}
+
+
+/*
+  Slightly soften controls that aren't currently selected.
+  They're still very clearly clickable.
+*/
+.story-buildable-inline-control:not(.is-active) {
+  opacity: 0.74;
+}
+
+
+.story-buildable-inline-control:focus-visible {
+  outline: 2px solid #ffffff;
+
+  outline-offset: 3px;
+}
+
+
+/*
+  Make "CLICK THE HIGHLIGHTED TERMS"
+  use the same filled-control language.
+
+  Since the instruction itself doesn't correspond
+  to one map layer, use the site's editorial red.
+*/
+.story-buildable-inline-instruction strong {
+  display: inline-block;
+
+  margin-right: 0.4em;
+
+  padding: 0.12em 0.4em 0.16em;
+
+  border: 1px solid var(--story-red);
+
+  border-radius: 2px;
+
+  background: var(--story-red);
+
+  font-family: var(--story-body) !important;
+
+  font-size: 0.86em;
+
+  font-weight: 750;
+
+  line-height: 1.15;
+
+  letter-spacing: 0.025em;
+
+  text-transform: uppercase;
+
+  color: #ffffff;
+}
+
+/* =========================================================
+   ANDORRA TODAY — BLACK STAT BLOCKS
+   ========================================================= */
+
+
+/* 482 + people/mi² */
+.story-today-density-number {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  width: fit-content;
+
+  padding: 1rem 1.25rem 1.1rem;
+
+  background: #000000;
+
+  border-radius: 2px;
+}
+
+
+/* Make 482 + people/mi² white */
+.story-today-density-number .story-today-big-stat,
+.story-today-density-number .story-today-big-stat-unit {
+  color: #ffffff !important;
+}
+
+
+/* 65+ and ~8% stat blocks */
+.story-today-beat-stat {
+  display: inline-flex;
+  flex-direction: column;
+
+  width: fit-content;
+
+  padding: 1rem 1.25rem 1.1rem;
+
+  background: #000000;
+
+  border-radius: 2px;
+
+  justify-self: start;
+}
+
+
+/* Keep the right-side stat aligned right */
+.story-today-beat--right .story-today-beat-stat {
+  justify-self: end;
+}
+
+
+/* Make numbers + captions white */
+.story-today-beat-stat .story-today-big-stat,
+.story-today-beat-stat .story-today-stat-caption {
+  color: #ffffff !important;
+}
+
+
+/* BY ROAD */
+.story-today-road-word {
+  display: inline-block;
+
+  width: fit-content;
+
+  padding: 0.7rem 1rem 0.8rem;
+
+  background: #000000;
+
+  border-radius: 2px;
+
+  color: #ffffff !important;
+}
+
+
+/* Mobile alignment */
+@media (max-width: 900px) {
+  .story-today-beat--right .story-today-beat-stat {
+    justify-self: start;
+  }
+}
+
+/* Tighten spacing between BY ROAD and the red question section */
+
+.story-today-road-beat {
+  padding-bottom: 1.5rem;
+}
+
+.story-today-question-beat {
+  margin-top: 1rem;
 }

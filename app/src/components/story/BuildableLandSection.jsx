@@ -128,10 +128,10 @@ export default function BuildableLandSection({
           <p className="story-buildable-inline-instruction">
 
             <strong>
-              Click
+              Click the highlighted terms
             </strong>{" "}
 
-            the highlighted terms below to see how each constraint reshapes the map.
+            below to see how each constraint reshapes the map.
 
           </p>
 

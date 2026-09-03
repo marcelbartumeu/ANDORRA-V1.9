@@ -70,6 +70,10 @@ const STAGE_OPACITY = [
     remaining: 0,
   },
 
+  /*
+    Stage 1:
+    Protected land is the focus.
+  */
   {
     buildable: 0,
     protected: 0.62,
@@ -78,27 +82,49 @@ const STAGE_OPACITY = [
     remaining: 0,
   },
 
+  /*
+    Stage 2:
+    Steep terrain becomes the focus.
+
+    Protected land stays much more visible
+    than it did previously.
+  */
   {
     buildable: 0.22,
-    protected: 0.32,
+    protected: 0.5,
     slope: 0.68,
     built: 0,
     remaining: 0,
   },
 
+  /*
+    Stage 3:
+    Existing built land becomes the focus.
+
+    Protected land and steep terrain remain
+    clearly visible as previous steps.
+  */
   {
     buildable: 0.14,
-    protected: 0.18,
-    slope: 0.2,
+    protected: 0.44,
+    slope: 0.49,
     built: 0.82,
     remaining: 0,
   },
 
+  /*
+    Stage 4:
+    Remaining buildable land becomes the focus.
+
+    All earlier constraints remain visible
+    so the final map still communicates the
+    cumulative process that produced it.
+  */
   {
     buildable: 0.05,
-    protected: 0.08,
-    slope: 0.09,
-    built: 0.16,
+    protected: 0.4,
+    slope: 0.44,
+    built: 0.56,
     remaining: 0.92,
   },
 ];
