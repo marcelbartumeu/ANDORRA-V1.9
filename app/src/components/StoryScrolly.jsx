@@ -255,29 +255,71 @@ export default function StoryScrolly() {
   );
 
   useEffect(() => {
-    if (!displaySteps.length) return;
+  if (!displaySteps.length) return;
 
-    const sections = document.querySelectorAll("[data-story-section]");
+  const sections = Array.from(
+    document.querySelectorAll("[data-story-section]")
+  );
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleEntries = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+  function updateActiveSection() {
+    /*
+      Invisible activation line about 30%
+      down from the top of the viewport.
+    */
+    const activationPoint =
+      window.innerHeight * 0.3;
 
-        if (visibleEntries.length > 0) {
-          setActiveSectionId(visibleEntries[0].target.id);
-        }
-      },
-      {
-        rootMargin: "-18% 0px -58% 0px",
-        threshold: [0.12, 0.3, 0.5],
+    let activeId = "home";
+
+    sections.forEach((section) => {
+      const rect =
+        section.getBoundingClientRect();
+
+      /*
+        Once a section's top passes
+        the activation line, it becomes
+        the current chapter.
+      */
+      if (
+        rect.top <= activationPoint
+      ) {
+        activeId =
+          section.id;
       }
+    });
+
+    setActiveSectionId(
+      activeId
+    );
+  }
+
+  updateActiveSection();
+
+  window.addEventListener(
+    "scroll",
+    updateActiveSection,
+    {
+      passive: true,
+    }
+  );
+
+  window.addEventListener(
+    "resize",
+    updateActiveSection
+  );
+
+  return () => {
+    window.removeEventListener(
+      "scroll",
+      updateActiveSection
     );
 
-    sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
-  }, [displaySteps]);
+    window.removeEventListener(
+      "resize",
+      updateActiveSection
+    );
+  };
+}, [displaySteps]);
 
   const scrollToSection = (sectionId) => {
     document.getElementById(sectionId)?.scrollIntoView({
@@ -351,9 +393,12 @@ export default function StoryScrolly() {
               </div>
             </div>
           ) : (
-            <div className="story-nav-collapsed-mark" aria-hidden="true">
-              A
-            </div>
+            <div className="story-nav-collapsed-mark">
+  <img
+    src="/city-science-logo.png"
+    alt="City Science"
+  />
+</div>
           )}
         </div>
       </aside>
